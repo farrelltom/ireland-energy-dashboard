@@ -458,6 +458,41 @@
 
   <hr class="divider">
 
+  {# ── Electricity supplier rates ─────────────────────────────────────── #}
+  {% if insights.tariff_comparison is defined and insights.tariff_comparison.suppliers %}
+  {% set tc = insights.tariff_comparison %}
+  <div class="section">
+    <p class="section-label">Who is cheapest right now?</p>
+    <table class="supplier-table">
+      <thead>
+        <tr>
+          <th>Supplier</th>
+          <th>Plan</th>
+          <th>Unit rate</th>
+          <th>Standing charge</th>
+          <th>Est. annual cost</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in tc.suppliers %}
+        <tr class="{{ 'is-cheapest' if s.supplier == tc.cheapest else '' }}">
+          <td>{{ s.supplier }}</td>
+          <td style="color:var(--ink-faint)">{{ s.plan }}</td>
+          <td><span class="rate-value">€{{ "%.3f"|format(s.unit_rate_eur_per_kwh) }}</span><span style="font-size:0.75rem;color:var(--ink-faint)">/kWh</span></td>
+          <td>€{{ "%d"|format(s.standing_charge_eur_per_year) }}/yr</td>
+          <td>€{{ "%d"|format(s.annual_cost_eur) }}/yr</td>
+          <td class="cheapest-badge">{{ '★ Cheapest' if s.supplier == tc.cheapest else '' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <p class="tariff-note">Annual cost estimated at {{ tc.annual_kwh_assumed | int }}&thinsp;kWh/yr &mdash; Irish household average. Plans and discounts vary; always check supplier directly.</p>
+  </div>
+  {% endif %}
+
+  <hr class="divider">
+
   {# ── Charts ─────────────────────────────────────────── #}
   <div class="section">
     <p class="section-label">Trends</p>
@@ -536,6 +571,7 @@
     (published weekly).<br>
     EV cost assumes 18 kWh/100 km at €0.40/kWh home charging.
     Petrol cost assumes 6.5 L/100 km; diesel 6.2 L/100 km.
+    Supplier annual costs estimated at 4,200 kWh/yr.
     These are consistent assumptions held fixed week to week &mdash; useful for trends,
     not exact for your specific car or tariff.
   </div>

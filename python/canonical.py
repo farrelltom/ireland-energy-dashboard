@@ -108,3 +108,59 @@ def series_sha256() -> str:
     if not CANONICAL_PATH.exists():
         return ""
     return hashlib.sha256(CANONICAL_PATH.read_bytes()).hexdigest()
+
+
+# ---------------------------------------------------------------------------
+# Tariff store
+# ---------------------------------------------------------------------------
+
+TARIFFS_PATH = DATA_DIR / "canonical" / "tariffs.csv"
+
+_TARIFF_FIELDNAMES = [
+    "date",
+    "supplier",
+    "plan",
+    "unit_rate_eur_per_kwh",
+    "standing_charge_eur_per_year",
+    "source",
+]
+
+
+def _tariff_key(row: dict) -> tuple[str, str, str, str]:
+    """Primary key: (date, supplier, plan, source)."""
+    return (row["date"], row["supplier"], row["plan"], row["source"])
+
+
+def read_tariffs() -> list[dict]:
+    """Return all rows from tariffs.csv as plain dicts (strings for all fields).
+
+    Callers are responsible for converting numeric fields.
+    Returns an empty list if the file does not exist yet.
+    """
+    if not TARIFFS_PATH.exists():
+        return []
+    with TARIFFS_PATH.open(newline="", encoding="utf-8") as f:
+        return list(csv.DictReader(f))
+
+
+def upsert_tariffs(rows: list[dict]) -> None:
+    """Upsert tariff rows into tariffs.csv in a single atomic write.
+
+    Each row must be a dict with keys matching _TARIFF_FIELDNAMES.
+    Primary key is (date, supplier, plan, source) — new row wins on conflict.
+    Rows are sorted by (date, supplier, plan) before writing.
+    """
+    existing = {_tariff_key(r): r for r in read_tariffs()}
+    for r in rows:
+        existing[_tariff_key(r)] = r
+
+    sorted_rows = sorted(existing.values(), key=lambda r: (r["date"], r["supplier"], r["plan"]))
+
+    buf = io.StringIO()
+    writer = csv.DictWriter(buf, fieldnames=_TARIFF_FIELDNAMES, lineterminator="\n")
+    writer.writeheader()
+    for r in sorted_rows:
+        writer.writerow(r)
+
+    TARIFFS_PATH.parent.mkdir(parents=True, exist_ok=True)
+    atomic_write(TARIFFS_PATH, buf.getvalue())

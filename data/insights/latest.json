@@ -6,6 +6,20 @@
   "chart_insights": {
     "petrol_price_eur_per_litre": "Pump prices are unchanged from last week."
   },
+  "tariff_comparison": {
+    "suppliers": [
+      {
+        "supplier": "Energia",
+        "plan": "Standard 24hr",
+        "unit_rate_eur_per_kwh": 0.332,
+        "standing_charge_eur_per_year": 310.0,
+        "annual_cost_eur": 1704.4,
+        "as_of": "2026-03-29"
+      }
+    ],
+    "cheapest": "Energia",
+    "annual_kwh_assumed": 4200
+  },
   "metrics": {
     "diesel_price_eur_per_litre": {
       "latest_value": 1.9,

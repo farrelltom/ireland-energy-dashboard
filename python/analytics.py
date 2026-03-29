@@ -25,7 +25,7 @@ import logging
 from collections import defaultdict
 from datetime import date, timedelta
 
-from canonical import CANONICAL_PATH, read_series, series_sha256
+from canonical import CANONICAL_PATH, read_series, read_tariffs, series_sha256
 from pipeline import DATA_DIR, DailyReading, atomic_write
 
 logger = logging.getLogger(__name__)
@@ -36,7 +36,8 @@ INSIGHTS_PATH = DATA_DIR / "insights" / "latest.json"
 _EV_KWH_PER_100KM = 18.0
 _DEFAULT_ELECTRICITY_EUR_PER_KWH = 0.40  # fallback if no tariff data
 _PETROL_L_PER_100KM = 6.5
-_DIESEL_L_PER_100KM = 6.2  # fixed assumption — typical diesel car, keep in sync with template label
+_DIESEL_L_PER_100KM = 6.2  # fixed assumption
+_ANNUAL_KWH = 4200  # typical Irish household, used for apples-to-apples supplier comparison — typical diesel car, keep in sync with template label
 
 
 def run() -> None:
@@ -187,12 +188,16 @@ def run() -> None:
     # --- Per-chart insight sentences (simple threshold rules) ---
     chart_insights = _build_chart_insights(by_metric)
 
+    # --- Supplier tariff comparison ---
+    tariff_comparison = _build_tariff_comparison()
+
     _write({
         "series_csv_sha256": sha,
         "page_latest_date": page_latest_date,
         "headline": headline,
         "changes": changes,
         "chart_insights": chart_insights,
+        "tariff_comparison": tariff_comparison,
         "metrics": metrics_out,
         "insights": insights,
     })
@@ -215,6 +220,49 @@ def _week_over_week(points: list[tuple[date, float]]) -> float | None:
         return None
     _, prior_val = min(candidates, key=lambda x: abs((x[0] - target).days))
     return latest_val - prior_val
+
+
+def _build_tariff_comparison() -> dict:
+    """Build supplier comparison data from the latest tariff row per supplier.
+
+    Returns a dict with:
+      suppliers: list of dicts sorted by annual_cost_eur ascending
+      cheapest:  slug of cheapest supplier (or None)
+      annual_kwh_assumed: the household usage assumption used
+    """
+    rows = read_tariffs()
+    if not rows:
+        return {"suppliers": [], "cheapest": None, "annual_kwh_assumed": _ANNUAL_KWH}
+
+    # Keep only the most recent row per supplier
+    latest: dict[str, dict] = {}
+    for row in rows:
+        supplier = row["supplier"]
+        if supplier not in latest or row["date"] > latest[supplier]["date"]:
+            latest[supplier] = row
+
+    suppliers = []
+    for supplier, row in latest.items():
+        unit_rate = float(row["unit_rate_eur_per_kwh"])
+        standing = float(row["standing_charge_eur_per_year"])
+        annual_cost = round(unit_rate * _ANNUAL_KWH + standing, 2)
+        suppliers.append({
+            "supplier": supplier,
+            "plan": row["plan"],
+            "unit_rate_eur_per_kwh": unit_rate,
+            "standing_charge_eur_per_year": standing,
+            "annual_cost_eur": annual_cost,
+            "as_of": row["date"],
+        })
+
+    suppliers.sort(key=lambda s: s["annual_cost_eur"])
+    cheapest = suppliers[0]["supplier"] if suppliers else None
+
+    return {
+        "suppliers": suppliers,
+        "cheapest": cheapest,
+        "annual_kwh_assumed": _ANNUAL_KWH,
+    }
 
 
 def _unit_for_metric(series: list[DailyReading], metric: str) -> str:
