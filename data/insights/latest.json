@@ -1,5 +1,11 @@
 {
   "series_csv_sha256": "b9a17d670169a362d62e824e263ac296f6e61175460663a93f0221b2eaf24d97",
+  "page_latest_date": "2026-03-29",
+  "headline": "EV home charging costs 39% less per 100\u202fkm than petrol at current pump prices.",
+  "changes": [],
+  "chart_insights": {
+    "petrol_price_eur_per_litre": "Pump prices are unchanged from last week."
+  },
   "metrics": {
     "diesel_price_eur_per_litre": {
       "latest_value": 1.9,
@@ -20,7 +26,14 @@
     "petrol_cost_eur_per_100km": {
       "latest_value": 11.77,
       "latest_date": "2026-03-29",
-      "unit": "\u20ac/100km"
+      "unit": "\u20ac/100km",
+      "consumption_l_per_100km": 6.5
+    },
+    "diesel_cost_eur_per_100km": {
+      "latest_value": 11.78,
+      "latest_date": "2026-03-29",
+      "unit": "\u20ac/100km",
+      "consumption_l_per_100km": 6.2
     }
   },
   "insights": [

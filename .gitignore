@@ -6,4 +6,4 @@ data/raw/
 data/parsed/
 node_modules/
 .next/
-dist/
+dist/index.html

@@ -181,6 +181,87 @@
     .method-note a { color: var(--ink-mid); }
     .method-note a:hover { color: var(--ink); }
 
+    /* ── Headline ────────────────────────────────────────── */
+    .headline {
+      font-size: 1.15rem;
+      font-weight: 500;
+      color: var(--ink);
+      line-height: 1.55;
+      margin-top: 1rem;
+      border-left: 3px solid var(--green);
+      padding-left: 1rem;
+    }
+
+    /* ── What changed pills ──────────────────────────────── */
+    .changes-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1.25rem;
+    }
+    .change-pill {
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.28rem 0.72rem;
+      border-radius: 999px;
+      border: 1px solid;
+      white-space: nowrap;
+    }
+    .change-pill--good    { color: #1a7f4b; background: rgba(26,127,75,0.08); border-color: rgba(26,127,75,0.25); }
+    .change-pill--bad     { color: #b45309; background: rgba(180,83,9,0.08);  border-color: rgba(180,83,9,0.25); }
+    .change-pill--neutral { color: var(--ink-faint); background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.12); }
+
+    /* ── Cost comparison block ───────────────────────────── */
+    .cost-block {
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.5rem 1.75rem;
+    }
+    .cost-block__title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 1.25rem;
+    }
+    .cost-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .cost-row:last-of-type { border-bottom: none; }
+    .cost-row__label {
+      font-size: 0.95rem;
+      color: var(--ink-mid);
+    }
+    .cost-row__value {
+      font-size: 1.7rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+    }
+    .cost-row__value--ev { color: var(--green); }
+    .cost-saving {
+      margin-top: 1.25rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--green);
+      text-align: center;
+    }
+
+    /* ── Chart callout ───────────────────────────────────── */
+    .chart-block__callout {
+      font-size: 0.85rem;
+      color: var(--ink-mid);
+      font-style: italic;
+      margin-top: -0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
     /* ── Responsive ──────────────────────────────────────── */
     @media (max-width: 540px) {
       html { font-size: 16px; }
@@ -196,29 +277,52 @@
 
 <header class="site-header">
   <span class="site-header__title">Ireland Energy</span>
-  <span class="site-header__sub">Updated daily from public sources</span>
+  <span class="site-header__sub">Updated daily from public sources &mdash; data to 2026-03-29</span>
 </header>
 
 <main>
 
   
   <div class="section">
-    <h1 class="page-title">Grid &amp; fuel<br>this week</h1>
-    <p class="page-subtitle">
-      Wind on the grid, CO₂ intensity, and what it costs to drive &mdash;
-      tracked daily from EirGrid and AA Ireland.
-    </p>
+    <h1 class="page-title">Ireland's energy<br>this week</h1>
+    
+    <p class="headline">EV home charging costs 39% less per 100 km than petrol at current pump prices.</p>
+    
+    
   </div>
+
+  <hr class="divider">
 
   
   
   <div class="section">
-    <p class="section-label">What this means</p>
-    <ul class="insight-list">
+    <div class="cost-block">
+      <div class="cost-block__title">Cost to drive 100 km</div>
       
-      <li>EV (home charging at €0.40/kWh) costs €7.20/100km vs €11.77/100km for petrol — 39% cheaper.</li>
+      <div class="cost-row">
+        <span class="cost-row__label">Electric (home charging, €0.40/kWh)</span>
+        <span class="cost-row__value cost-row__value--ev">€7.20</span>
+      </div>
       
-    </ul>
+      
+      <div class="cost-row">
+        <span class="cost-row__label">Petrol at pump (6.5 L/100 km)</span>
+        <span class="cost-row__value">€11.77</span>
+      </div>
+      
+      
+      
+      <div class="cost-row">
+        <span class="cost-row__label">Diesel at pump (6.2 L/100 km)</span>
+        <span class="cost-row__value">€11.78</span>
+      </div>
+      
+      
+      
+      
+      <div class="cost-saving">EV is ~39% cheaper per 100 km than petrol</div>
+      
+    </div>
   </div>
   
 
@@ -254,14 +358,6 @@
     
 
     
-    
-    
-    <div class="kpi">
-      <div class="kpi__label">EV / 100 km</div>
-      <div class="kpi__value">€7.20</div>
-      <div class="kpi__unit">home charging &mdash; petrol is €11.77</div>
-    </div>
-    
 
     
 
@@ -271,6 +367,18 @@
 
     </div>
   </div>
+
+  
+  
+  <div class="section">
+    <p class="section-label">More context</p>
+    <ul class="insight-list">
+      
+      <li>EV (home charging at €0.40/kWh) costs €7.20/100km vs €11.77/100km for petrol — 39% cheaper.</li>
+      
+    </ul>
+  </div>
+  
 
   <hr class="divider">
 
@@ -286,6 +394,9 @@
     <div class="chart-block">
       <div class="chart-block__title">Pump prices at the forecourt</div>
       <div class="chart-block__note">€ per litre &mdash; petrol and diesel, AA Ireland national average</div>
+      
+      <div class="chart-block__callout">Pump prices are unchanged from last week.</div>
+      
       <canvas id="chart-fuel"></canvas>
     </div>
     
@@ -306,7 +417,7 @@
     Fuel prices from <a href="https://www.theaa.ie/aa-membership/fuel-prices/" target="_blank" rel="noopener">AA Ireland</a>
     (published weekly).<br>
     EV cost assumes 18 kWh/100 km at €0.40/kWh home charging.
-    Petrol cost assumes 6.5 L/100 km.
+    Petrol cost assumes 6.5 L/100 km; diesel 6.2 L/100 km.
     These are consistent assumptions held fixed week to week &mdash; useful for trends,
     not exact for your specific car or tariff.
   </div>

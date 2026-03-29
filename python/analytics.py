@@ -36,6 +36,7 @@ INSIGHTS_PATH = DATA_DIR / "insights" / "latest.json"
 _EV_KWH_PER_100KM = 18.0
 _DEFAULT_ELECTRICITY_EUR_PER_KWH = 0.40  # fallback if no tariff data
 _PETROL_L_PER_100KM = 6.5
+_DIESEL_L_PER_100KM = 6.2  # fixed assumption — typical diesel car, keep in sync with template label
 
 
 def run() -> None:
@@ -135,8 +136,9 @@ def run() -> None:
                 f"sending an average of {abs(latest_inter):.0f} MW abroad via interconnectors."
             )
 
-    # EV vs petrol cost comparison
+    # EV vs petrol vs diesel cost comparison
     petrol_points = by_metric.get("petrol_price_eur_per_litre", [])
+    diesel_points = by_metric.get("diesel_price_eur_per_litre", [])
     if petrol_points:
         petrol_eur = petrol_points[-1][1]
         electricity_eur = _DEFAULT_ELECTRICITY_EUR_PER_KWH
@@ -158,9 +160,42 @@ def run() -> None:
             "latest_value": round(petrol_cost_100km, 2),
             "latest_date": petrol_points[-1][0].isoformat(),
             "unit": "€/100km",
+            "consumption_l_per_100km": _PETROL_L_PER_100KM,
+        }
+    if diesel_points:
+        diesel_eur = diesel_points[-1][1]
+        diesel_cost_100km = diesel_eur * _DIESEL_L_PER_100KM
+        metrics_out["diesel_cost_eur_per_100km"] = {
+            "latest_value": round(diesel_cost_100km, 2),
+            "latest_date": diesel_points[-1][0].isoformat(),
+            "unit": "€/100km",
+            "consumption_l_per_100km": _DIESEL_L_PER_100KM,
         }
 
-    _write({"series_csv_sha256": sha, "metrics": metrics_out, "insights": insights})
+    # --- Page-level freshness: max latest_date across all metrics on the page ---
+    page_latest_date = max(
+        (m["latest_date"] for m in metrics_out.values() if "latest_date" in m),
+        default=None,
+    )
+
+    # --- Headline: one sentence combining the two most impactful facts ---
+    headline = _build_headline(by_metric, metrics_out)
+
+    # --- What changed: pre-evaluated directional pills (domain semantics applied) ---
+    changes = _build_changes(by_metric)
+
+    # --- Per-chart insight sentences (simple threshold rules) ---
+    chart_insights = _build_chart_insights(by_metric)
+
+    _write({
+        "series_csv_sha256": sha,
+        "page_latest_date": page_latest_date,
+        "headline": headline,
+        "changes": changes,
+        "chart_insights": chart_insights,
+        "metrics": metrics_out,
+        "insights": insights,
+    })
     logger.info("Analytics: wrote %s", INSIGHTS_PATH)
 
 
@@ -187,3 +222,170 @@ def _unit_for_metric(series: list[DailyReading], metric: str) -> str:
         if r.metric == metric:
             return r.unit
     return ""
+
+
+def _build_headline(
+    by_metric: dict[str, list[tuple[date, float]]],
+    metrics_out: dict[str, dict],
+) -> str:
+    """One sentence combining the two most impactful current facts.
+
+    Uses 'yesterday' and 'at current pump prices' to match the actual
+    aggregation semantics (latest daily point, not a weekly aggregate).
+    """
+    ev = metrics_out.get("ev_cost_eur_per_100km")
+    petrol = metrics_out.get("petrol_cost_eur_per_100km")
+    wind_pts = by_metric.get("wind_pct_of_generation_daily_avg", [])
+
+    parts: list[str] = []
+    if ev and petrol and petrol["latest_value"] > 0:
+        saving_pct = (petrol["latest_value"] - ev["latest_value"]) / petrol["latest_value"] * 100
+        parts.append(
+            f"EV home charging costs {saving_pct:.0f}% less per 100\u202fkm "
+            f"than petrol at current pump prices"
+        )
+    if wind_pts:
+        parts.append(
+            f"wind supplied {wind_pts[-1][1]:.0f}% of Ireland\u2019s electricity yesterday"
+        )
+    def _cap(s: str) -> str:
+        return s[:1].upper() + s[1:] if s else s
+
+    if not parts:
+        return ""
+    if len(parts) == 1:
+        return _cap(parts[0]) + "."
+    return f"{_cap(parts[0])} \u2014 and {parts[1]}."
+
+
+def _build_changes(by_metric: dict[str, list[tuple[date, float]]]) -> list[dict]:
+    """Pre-evaluated directional change pills with domain semantics applied.
+
+    Direction is one of 'good', 'bad', 'neutral'.
+    The caller (template) does not need to know which direction is positive —
+    that inversion is applied here for CO₂ and fuel prices.
+    """
+    changes: list[dict] = []
+
+    def _add(
+        label: str,
+        points: list[tuple[date, float]],
+        higher_is_good: bool,
+        fmt_fn,
+    ) -> None:
+        wow = _week_over_week(points)
+        if wow is None:
+            return
+        arrow = "\u2191" if wow >= 0 else "\u2193"
+        direction = ("good" if wow >= 0 else "bad") if higher_is_good else ("bad" if wow >= 0 else "good")
+        changes.append({"label": label, "delta_str": f"{arrow}\u202f{fmt_fn(wow)}", "direction": direction})
+
+    wind_pts = by_metric.get("wind_pct_of_generation_daily_avg", [])
+    if wind_pts:
+        _add("Wind", wind_pts, higher_is_good=True, fmt_fn=lambda d: f"{abs(d):.0f}pp")
+
+    solar_pts = by_metric.get("solar_pct_of_generation_daily_avg", [])
+    if solar_pts:
+        _add("Solar", solar_pts, higher_is_good=True, fmt_fn=lambda d: f"{abs(d):.1f}pp")
+
+    co2_pts = by_metric.get("co2_intensity_daily_avg", [])
+    if co2_pts:
+        _add("CO\u2082 intensity", co2_pts, higher_is_good=False, fmt_fn=lambda d: f"{abs(d):.0f}\u202fgCO\u2082/kWh")
+
+    petrol_pts = by_metric.get("petrol_price_eur_per_litre", [])
+    if petrol_pts:
+        _add("Petrol", petrol_pts, higher_is_good=False, fmt_fn=lambda d: f"\u20ac{abs(d):.3f}/L")
+
+    diesel_pts = by_metric.get("diesel_price_eur_per_litre", [])
+    if diesel_pts:
+        _add("Diesel", diesel_pts, higher_is_good=False, fmt_fn=lambda d: f"\u20ac{abs(d):.3f}/L")
+
+    return changes
+
+
+def _build_chart_insights(by_metric: dict[str, list[tuple[date, float]]]) -> dict[str, str]:
+    """One plain-English sentence per metric chart, generated from simple threshold rules.
+
+    Thresholds are set to produce actionable statements, not to restate the plotted line.
+    """
+    out: dict[str, str] = {}
+
+    wind_pts = by_metric.get("wind_pct_of_generation_daily_avg", [])
+    if wind_pts:
+        wow = _week_over_week(wind_pts)
+        if wow is not None:
+            if wow > 5:
+                out["wind_pct_of_generation_daily_avg"] = (
+                    "Wind share is notably higher than last week — grid CO\u2082 emissions are likely lower as a result."
+                )
+            elif wow < -5:
+                out["wind_pct_of_generation_daily_avg"] = (
+                    "Wind share has fallen compared to last week — the grid has leaned more on gas and other sources."
+                )
+            else:
+                out["wind_pct_of_generation_daily_avg"] = (
+                    f"Wind has been providing around {wind_pts[-1][1]:.0f}% of generation — broadly stable week on week."
+                )
+        else:
+            out["wind_pct_of_generation_daily_avg"] = (
+                f"Wind currently supplies {wind_pts[-1][1]:.0f}% of Irish electricity generation."
+            )
+
+    co2_pts = by_metric.get("co2_intensity_daily_avg", [])
+    if co2_pts:
+        wow = _week_over_week(co2_pts)
+        if wow is not None:
+            if wow > 20:
+                out["co2_intensity_daily_avg"] = (
+                    "CO\u2082 intensity is higher than last week, likely reflecting less renewable output."
+                )
+            elif wow < -20:
+                out["co2_intensity_daily_avg"] = (
+                    "CO\u2082 intensity is lower than last week — more renewable generation is reducing grid emissions."
+                )
+            else:
+                out["co2_intensity_daily_avg"] = "Grid CO\u2082 intensity has been broadly stable week on week."
+        else:
+            out["co2_intensity_daily_avg"] = f"Grid CO\u2082 intensity is currently {co2_pts[-1][1]:.0f}\u202fgCO\u2082/kWh."
+
+    petrol_pts = by_metric.get("petrol_price_eur_per_litre", [])
+    if petrol_pts:
+        wow = _week_over_week(petrol_pts)
+        if wow is not None and abs(wow) >= 0.005:
+            direction = "risen" if wow > 0 else "fallen"
+            out["petrol_price_eur_per_litre"] = f"Pump prices have {direction} since last week."
+        else:
+            out["petrol_price_eur_per_litre"] = "Pump prices are unchanged from last week."
+
+    solar_pts = by_metric.get("solar_pct_of_generation_daily_avg", [])
+    if solar_pts:
+        wow = _week_over_week(solar_pts)
+        if wow is not None:
+            if wow > 1:
+                out["solar_pct_of_generation_daily_avg"] = "Solar generation has increased compared to last week."
+            elif wow < -1:
+                out["solar_pct_of_generation_daily_avg"] = "Solar output has dipped compared to last week."
+            else:
+                out["solar_pct_of_generation_daily_avg"] = (
+                    f"Solar is providing around {solar_pts[-1][1]:.1f}% of generation — broadly unchanged."
+                )
+        else:
+            out["solar_pct_of_generation_daily_avg"] = (
+                f"Solar currently provides {solar_pts[-1][1]:.1f}% of electricity generation."
+            )
+
+    inter_pts = by_metric.get("net_interconnection_mw_daily_avg", [])
+    if inter_pts:
+        latest_inter = inter_pts[-1][1]
+        if latest_inter > 50:
+            out["net_interconnection_mw_daily_avg"] = (
+                f"Ireland is drawing around {latest_inter:.0f}\u202fMW from interconnectors — a net importer yesterday."
+            )
+        elif latest_inter < -50:
+            out["net_interconnection_mw_daily_avg"] = (
+                f"Ireland exported around {abs(latest_inter):.0f}\u202fMW via interconnectors yesterday — surplus renewable supply."
+            )
+        else:
+            out["net_interconnection_mw_daily_avg"] = "Interconnection flows were close to balanced yesterday."
+
+    return out
