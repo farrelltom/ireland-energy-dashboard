@@ -24,6 +24,7 @@ from sources.aa_fuel import AAFuelAdapter
 from sources.bge import BGEAdapter
 from sources.eirgrid import EirGridAdapter
 from sources.energia import EnergiaAdapter
+from sources.sse import SSEAdapter
 
 logging.basicConfig(
     level=logging.INFO,
@@ -71,7 +72,7 @@ def run(d: date) -> int:
             return 1
 
     # --- Fetch + Parse: tariff data ---
-    tariff_adapters = [EnergiaAdapter(), BGEAdapter()]
+    tariff_adapters = [EnergiaAdapter(), BGEAdapter(), SSEAdapter()]
     tariff_rows: list[dict] = []
 
     for adapter in tariff_adapters:

@@ -25,7 +25,7 @@ import logging
 from collections import defaultdict
 from datetime import date, timedelta
 
-from canonical import CANONICAL_PATH, read_series, read_tariffs, series_sha256
+from canonical import CANONICAL_PATH, read_series, read_tariffs, series_sha256, tariffs_sha256
 from pipeline import DATA_DIR, DailyReading, atomic_write
 
 logger = logging.getLogger(__name__)
@@ -41,16 +41,32 @@ _ANNUAL_KWH = 4200  # typical Irish household, used for apples-to-apples supplie
 
 
 def run() -> None:
-    """Compute insights from the canonical series and write latest.json.
+    """Compute insights from canonical data and write latest.json.
 
-    Raises on failure. Caller (main.py) treats this as a pipeline error.
+    Tariff comparison is always computed, even when the series is empty or
+    the series fetch failed.  Series and tariff hashes are both stamped so
+    render.py can verify both stores are current.
+
+    Raises on failure.  Caller (main.py) treats this as a pipeline error.
     """
     series = read_series()
-    sha = series_sha256()
+    series_sha = series_sha256()
+    tariffs_sha = tariffs_sha256()
+
+    # --- Tariff comparison (always computed, series-independent) ---
+    tariff_comparison = _build_tariff_comparison()
 
     if not series:
-        logger.warning("Analytics: canonical series is empty — writing minimal insights")
-        _write({"series_csv_sha256": sha, "metrics": {}, "insights": []})
+        logger.warning("Analytics: canonical series is empty — writing tariff-only insights")
+        _write({
+            "series_csv_sha256": series_sha,
+            "tariffs_csv_sha256": tariffs_sha,
+            "page_latest_date": _tariff_latest_date(tariff_comparison),
+            "tariff_comparison": tariff_comparison,
+            "metrics": {},
+            "insights": [],
+        })
+        logger.info("Analytics: wrote %s", INSIGHTS_PATH)
         return
 
     # Index by metric → sorted list of (date, value)
@@ -173,11 +189,11 @@ def run() -> None:
             "consumption_l_per_100km": _DIESEL_L_PER_100KM,
         }
 
-    # --- Page-level freshness: max latest_date across all metrics on the page ---
-    page_latest_date = max(
-        (m["latest_date"] for m in metrics_out.values() if "latest_date" in m),
-        default=None,
-    )
+    # --- Page-level freshness: max latest_date across metrics AND tariff rows ---
+    metric_dates = [m["latest_date"] for m in metrics_out.values() if "latest_date" in m]
+    tariff_dates = [s["as_of"] for s in tariff_comparison.get("suppliers", [])]
+    all_dates = metric_dates + tariff_dates
+    page_latest_date = max(all_dates) if all_dates else None
 
     # --- Headline: one sentence combining the two most impactful facts ---
     headline = _build_headline(by_metric, metrics_out)
@@ -188,11 +204,9 @@ def run() -> None:
     # --- Per-chart insight sentences (simple threshold rules) ---
     chart_insights = _build_chart_insights(by_metric)
 
-    # --- Supplier tariff comparison ---
-    tariff_comparison = _build_tariff_comparison()
-
     _write({
-        "series_csv_sha256": sha,
+        "series_csv_sha256": series_sha,
+        "tariffs_csv_sha256": tariffs_sha,
         "page_latest_date": page_latest_date,
         "headline": headline,
         "changes": changes,
@@ -206,6 +220,12 @@ def run() -> None:
 
 def _write(data: dict) -> None:
     atomic_write(INSIGHTS_PATH, json.dumps(data, indent=2, default=str))
+
+
+def _tariff_latest_date(tc: dict) -> str | None:
+    """Return the most recent as_of date from a tariff_comparison dict, or None."""
+    dates = [s["as_of"] for s in tc.get("suppliers", []) if s.get("as_of")]
+    return max(dates) if dates else None
 
 
 def _week_over_week(points: list[tuple[date, float]]) -> float | None:
@@ -244,22 +264,15 @@ def _build_tariff_comparison() -> dict:
         }
 
     # Keep the most recent row per (supplier, customer_type).
-    # Tie-break on same date: scraped source beats "manual".
+    # canonical.py normalises customer_type='' → 'existing' on write, so
+    # the key here is always populated.
     latest: dict[tuple[str, str], dict] = {}
     for row in rows:
         supplier = row["supplier"]
-        ctype = row.get("customer_type") or "existing"
+        ctype = (row.get("customer_type") or "existing").strip()
         key = (supplier, ctype)
         existing = latest.get(key)
-        if existing is None:
-            latest[key] = row
-        elif row["date"] > existing["date"]:
-            latest[key] = row
-        elif (
-            row["date"] == existing["date"]
-            and existing.get("source") == "manual"
-            and row.get("source") != "manual"
-        ):
+        if existing is None or row["date"] > existing["date"]:
             latest[key] = row
 
     suppliers = []

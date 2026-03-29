@@ -14,7 +14,7 @@ from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from canonical import read_series, series_sha256
+from canonical import read_series, series_sha256, tariffs_sha256
 from pipeline import DATA_DIR, atomic_write
 
 logger = logging.getLogger(__name__)
@@ -35,12 +35,23 @@ def run() -> None:
     with INSIGHTS_PATH.open(encoding="utf-8") as f:
         insights = json.load(f)
 
-    current_sha = series_sha256()
-    stored_sha = insights.get("series_csv_sha256", "")
-    if current_sha != stored_sha:
+    current_series_sha = series_sha256()
+    stored_series_sha = insights.get("series_csv_sha256", "")
+    if current_series_sha != stored_series_sha:
         raise RuntimeError(
             f"Stale insights detected: latest.json was produced from a different "
-            f"canonical state (stored={stored_sha[:12]}…, current={current_sha[:12]}…). "
+            f"canonical series state (stored={stored_series_sha[:12]}\u2026, "
+            f"current={current_series_sha[:12]}\u2026). "
+            f"Re-run analytics before rendering."
+        )
+
+    current_tariffs_sha = tariffs_sha256()
+    stored_tariffs_sha = insights.get("tariffs_csv_sha256", "")
+    if current_tariffs_sha != stored_tariffs_sha:
+        raise RuntimeError(
+            f"Stale insights detected: latest.json was produced from a different "
+            f"tariffs state (stored={stored_tariffs_sha[:12]}\u2026, "
+            f"current={current_tariffs_sha[:12]}\u2026). "
             f"Re-run analytics before rendering."
         )
 

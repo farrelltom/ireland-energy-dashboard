@@ -1,5 +1,6 @@
 {
   "series_csv_sha256": "77ec9a398034c70e866a840930d61806c4403fdfaeda6344eecc2c56d06a3db8",
+  "tariffs_csv_sha256": "adafb3859f624a62d884e4f5cb104fd68e946eede51c8c14fc26e84be8621913",
   "page_latest_date": "2026-03-29",
   "headline": "EV home charging costs 39% less per 100\u202fkm than petrol at current pump prices.",
   "changes": [],
@@ -29,6 +30,26 @@
         "as_of": "2026-03-29"
       },
       {
+        "supplier": "SSE Airtricity",
+        "customer_type": "new",
+        "plan": "Standard 24hr",
+        "unit_rate_eur_per_kwh": 0.3085,
+        "standing_charge_eur_per_year": 263.86,
+        "discount_pct": 25,
+        "annual_cost_eur": 1559.56,
+        "as_of": "2026-03-29"
+      },
+      {
+        "supplier": "SSE Airtricity",
+        "customer_type": "existing",
+        "plan": "Standard 24hr",
+        "unit_rate_eur_per_kwh": 0.4113,
+        "standing_charge_eur_per_year": 263.86,
+        "discount_pct": null,
+        "annual_cost_eur": 1991.32,
+        "as_of": "2026-03-29"
+      },
+      {
         "supplier": "Bord G\u00e1is Energy",
         "customer_type": "existing",
         "plan": "Standard 24hr",
@@ -50,7 +71,7 @@
       }
     ],
     "cheapest_new": "Bord G\u00e1is Energy",
-    "cheapest_existing": "Bord G\u00e1is Energy",
+    "cheapest_existing": "SSE Airtricity",
     "annual_kwh_assumed": 4200
   },
   "metrics": {

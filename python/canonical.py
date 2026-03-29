@@ -130,9 +130,22 @@ _TARIFF_FIELDNAMES = [
 ]
 
 
-def _tariff_key(row: dict) -> tuple[str, str, str, str, str]:
-    """Primary key: (date, supplier, plan, customer_type, source)."""
-    return (row["date"], row["supplier"], row["plan"], row.get("customer_type", ""), row["source"])
+def _tariff_key(row: dict) -> tuple[str, str, str, str]:
+    """Primary key: (date, supplier, plan, customer_type).
+
+    Source is provenance metadata only, not part of the key.  This makes
+    canonical storage the single source of truth: the latest upsert for a
+    given (date, supplier, plan, customer_type) wins.
+    """
+    ctype = (row.get("customer_type") or "existing").strip()
+    return (row["date"], row["supplier"], row["plan"], ctype)
+
+
+def tariffs_sha256() -> str:
+    """Return the SHA-256 hex digest of tariffs.csv, or empty string if absent."""
+    if not TARIFFS_PATH.exists():
+        return ""
+    return hashlib.sha256(TARIFFS_PATH.read_bytes()).hexdigest()
 
 
 def read_tariffs() -> list[dict]:
@@ -158,14 +171,19 @@ def upsert_tariffs(rows: list[dict]) -> None:
     for r in rows:
         existing[_tariff_key(r)] = r
 
-    sorted_rows = sorted(existing.values(), key=lambda r: (r["date"], r["supplier"], r["plan"], r.get("customer_type", "")))
+    sorted_rows = sorted(
+        existing.values(),
+        key=lambda r: (r["date"], r["supplier"], r["plan"], r.get("customer_type") or "existing"),
+    )
 
     buf = io.StringIO()
     writer = csv.DictWriter(buf, fieldnames=_TARIFF_FIELDNAMES, lineterminator="\n", extrasaction="ignore")
     writer.writeheader()
     for r in sorted_rows:
-        # Back-fill new columns missing from older rows
         out = {f: r.get(f, "") for f in _TARIFF_FIELDNAMES}
+        # Normalize blank customer_type to canonical value
+        if not out["customer_type"].strip():
+            out["customer_type"] = "existing"
         writer.writerow(out)
 
     TARIFFS_PATH.parent.mkdir(parents=True, exist_ok=True)

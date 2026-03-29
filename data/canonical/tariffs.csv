@@ -1,7 +1,7 @@
 date,supplier,plan,customer_type,unit_rate_eur_per_kwh,standing_charge_eur_per_year,discount_pct,source,source_url,source_type
 2026-03-29,Bord Gáis Energy,Standard 24hr,existing,0.4159,244.76,,bge,https://www.bordgaisenergy.ie/home/our-plans,json_embedded
 2026-03-29,Bord Gáis Energy,Standard 24hr,new,0.2828,244.76,32,bge,https://www.bordgaisenergy.ie/home/our-plans,json_embedded
-2026-03-29,Energia,Standard 24hr,,0.332,310,,manual,,
-2026-03-29,Energia,Standard 24hr,,0.4265,265.01,,energia,,
 2026-03-29,Energia,Standard 24hr,existing,0.4265,265.01,,energia,https://www.energia.ie/about-energia/our-tariffs,html
 2026-03-29,Energia,Standard 24hr,new,0.3075,265.01,27,energia,https://www.energia.ie/about-energia/our-tariffs,html
+2026-03-29,SSE Airtricity,Standard 24hr,existing,0.4113,263.86,,sse,https://www.sseairtricity.com/ie/home/help-centre/our-tariffs/,pdf
+2026-03-29,SSE Airtricity,Standard 24hr,new,0.3085,263.86,25,sse,https://www.sseairtricity.com/ie/home/help-centre/our-tariffs/,pdf
