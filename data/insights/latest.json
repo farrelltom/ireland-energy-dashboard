@@ -9,15 +9,48 @@
   "tariff_comparison": {
     "suppliers": [
       {
+        "supplier": "Bord G\u00e1is Energy",
+        "customer_type": "new",
+        "plan": "Standard 24hr",
+        "unit_rate_eur_per_kwh": 0.2828,
+        "standing_charge_eur_per_year": 244.76,
+        "discount_pct": 32,
+        "annual_cost_eur": 1432.52,
+        "as_of": "2026-03-29"
+      },
+      {
         "supplier": "Energia",
+        "customer_type": "new",
+        "plan": "Standard 24hr",
+        "unit_rate_eur_per_kwh": 0.3075,
+        "standing_charge_eur_per_year": 265.01,
+        "discount_pct": 27,
+        "annual_cost_eur": 1556.51,
+        "as_of": "2026-03-29"
+      },
+      {
+        "supplier": "Bord G\u00e1is Energy",
+        "customer_type": "existing",
+        "plan": "Standard 24hr",
+        "unit_rate_eur_per_kwh": 0.4159,
+        "standing_charge_eur_per_year": 244.76,
+        "discount_pct": null,
+        "annual_cost_eur": 1991.54,
+        "as_of": "2026-03-29"
+      },
+      {
+        "supplier": "Energia",
+        "customer_type": "existing",
         "plan": "Standard 24hr",
         "unit_rate_eur_per_kwh": 0.4265,
         "standing_charge_eur_per_year": 265.01,
+        "discount_pct": null,
         "annual_cost_eur": 2056.31,
         "as_of": "2026-03-29"
       }
     ],
-    "cheapest": "Energia",
+    "cheapest_new": "Bord G\u00e1is Energy",
+    "cheapest_existing": "Bord G\u00e1is Energy",
     "annual_kwh_assumed": 4200
   },
   "metrics": {

@@ -21,6 +21,7 @@ import canonical
 import render
 from pipeline import DailyReading, is_raw_valid
 from sources.aa_fuel import AAFuelAdapter
+from sources.bge import BGEAdapter
 from sources.eirgrid import EirGridAdapter
 from sources.energia import EnergiaAdapter
 
@@ -70,7 +71,7 @@ def run(d: date) -> int:
             return 1
 
     # --- Fetch + Parse: tariff data ---
-    tariff_adapters = [EnergiaAdapter()]
+    tariff_adapters = [EnergiaAdapter(), BGEAdapter()]
     tariff_rows: list[dict] = []
 
     for adapter in tariff_adapters:

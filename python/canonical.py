@@ -120,15 +120,19 @@ _TARIFF_FIELDNAMES = [
     "date",
     "supplier",
     "plan",
+    "customer_type",           # "new" | "existing"
     "unit_rate_eur_per_kwh",
     "standing_charge_eur_per_year",
+    "discount_pct",            # integer string e.g. "30", or "" if not applicable
     "source",
+    "source_url",
+    "source_type",             # "html" | "json_embedded" | "manual"
 ]
 
 
-def _tariff_key(row: dict) -> tuple[str, str, str, str]:
-    """Primary key: (date, supplier, plan, source)."""
-    return (row["date"], row["supplier"], row["plan"], row["source"])
+def _tariff_key(row: dict) -> tuple[str, str, str, str, str]:
+    """Primary key: (date, supplier, plan, customer_type, source)."""
+    return (row["date"], row["supplier"], row["plan"], row.get("customer_type", ""), row["source"])
 
 
 def read_tariffs() -> list[dict]:
@@ -154,13 +158,15 @@ def upsert_tariffs(rows: list[dict]) -> None:
     for r in rows:
         existing[_tariff_key(r)] = r
 
-    sorted_rows = sorted(existing.values(), key=lambda r: (r["date"], r["supplier"], r["plan"]))
+    sorted_rows = sorted(existing.values(), key=lambda r: (r["date"], r["supplier"], r["plan"], r.get("customer_type", "")))
 
     buf = io.StringIO()
-    writer = csv.DictWriter(buf, fieldnames=_TARIFF_FIELDNAMES, lineterminator="\n")
+    writer = csv.DictWriter(buf, fieldnames=_TARIFF_FIELDNAMES, lineterminator="\n", extrasaction="ignore")
     writer.writeheader()
     for r in sorted_rows:
-        writer.writerow(r)
+        # Back-fill new columns missing from older rows
+        out = {f: r.get(f, "") for f in _TARIFF_FIELDNAMES}
+        writer.writerow(out)
 
     TARIFFS_PATH.parent.mkdir(parents=True, exist_ok=True)
     atomic_write(TARIFFS_PATH, buf.getvalue())

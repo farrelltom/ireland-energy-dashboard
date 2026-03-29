@@ -223,50 +223,73 @@ def _week_over_week(points: list[tuple[date, float]]) -> float | None:
 
 
 def _build_tariff_comparison() -> dict:
-    """Build supplier comparison data from the latest tariff row per supplier.
+    """Build supplier comparison data from the latest tariff rows.
+
+    Groups by (supplier, customer_type) so both new and existing customer
+    rates appear.  Rows without a customer_type default to "existing".
 
     Returns a dict with:
-      suppliers: list of dicts sorted by annual_cost_eur ascending
-      cheapest:  slug of cheapest supplier (or None)
+      suppliers: list of dicts sorted by (customer_type, annual_cost_eur)
+      cheapest_new:      supplier name with lowest new-customer annual cost
+      cheapest_existing: supplier name with lowest existing-customer annual cost
       annual_kwh_assumed: the household usage assumption used
     """
     rows = read_tariffs()
     if not rows:
-        return {"suppliers": [], "cheapest": None, "annual_kwh_assumed": _ANNUAL_KWH}
+        return {
+            "suppliers": [],
+            "cheapest_new": None,
+            "cheapest_existing": None,
+            "annual_kwh_assumed": _ANNUAL_KWH,
+        }
 
-    # Keep only the most recent row per supplier.
-    # Tie-break: scraped sources beat "manual" on the same date.
-    latest: dict[str, dict] = {}
+    # Keep the most recent row per (supplier, customer_type).
+    # Tie-break on same date: scraped source beats "manual".
+    latest: dict[tuple[str, str], dict] = {}
     for row in rows:
         supplier = row["supplier"]
-        existing = latest.get(supplier)
+        ctype = row.get("customer_type") or "existing"
+        key = (supplier, ctype)
+        existing = latest.get(key)
         if existing is None:
-            latest[supplier] = row
+            latest[key] = row
         elif row["date"] > existing["date"]:
-            latest[supplier] = row
-        elif row["date"] == existing["date"] and existing.get("source") == "manual" and row.get("source") != "manual":
-            latest[supplier] = row
+            latest[key] = row
+        elif (
+            row["date"] == existing["date"]
+            and existing.get("source") == "manual"
+            and row.get("source") != "manual"
+        ):
+            latest[key] = row
 
     suppliers = []
-    for supplier, row in latest.items():
+    for (supplier, ctype), row in latest.items():
         unit_rate = float(row["unit_rate_eur_per_kwh"])
         standing = float(row["standing_charge_eur_per_year"])
         annual_cost = round(unit_rate * _ANNUAL_KWH + standing, 2)
         suppliers.append({
             "supplier": supplier,
+            "customer_type": ctype,
             "plan": row["plan"],
             "unit_rate_eur_per_kwh": unit_rate,
             "standing_charge_eur_per_year": standing,
+            "discount_pct": int(row["discount_pct"]) if row.get("discount_pct") else None,
             "annual_cost_eur": annual_cost,
             "as_of": row["date"],
         })
 
-    suppliers.sort(key=lambda s: s["annual_cost_eur"])
-    cheapest = suppliers[0]["supplier"] if suppliers else None
+    # Sort: new customers first (cheapest to most expensive), then existing.
+    suppliers.sort(key=lambda s: (0 if s["customer_type"] == "new" else 1, s["annual_cost_eur"]))
+
+    new_rows = [s for s in suppliers if s["customer_type"] == "new"]
+    existing_rows = [s for s in suppliers if s["customer_type"] == "existing"]
+    cheapest_new = new_rows[0]["supplier"] if new_rows else None
+    cheapest_existing = existing_rows[0]["supplier"] if existing_rows else None
 
     return {
         "suppliers": suppliers,
-        "cheapest": cheapest,
+        "cheapest_new": cheapest_new,
+        "cheapest_existing": cheapest_existing,
         "annual_kwh_assumed": _ANNUAL_KWH,
     }
 
