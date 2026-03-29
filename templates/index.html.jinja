@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ireland Energy This Week</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:        #111;
+      --ink-mid:    #555;
+      --ink-faint:  #999;
+      --border:     #e4e4e4;
+      --bg:         #fff;
+      --green:      #1a7f4b;
+      --orange:     #b45309;
+      --blue:       #1d4ed8;
+      --purple:     #6d28d9;
+      --up:         #1a7f4b;
+      --down:       #b45309;
+    }
+
+    html { font-size: 17px; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                   "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Header ─────────────────────────────────────────── */
+    .site-header {
+      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: baseline;
+      gap: 1.25rem;
+    }
+    .site-header__title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+    .site-header__sub {
+      font-size: 0.82rem;
+      color: var(--ink-faint);
+    }
+
+    /* ── Page body ───────────────────────────────────────── */
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 3rem 1.25rem 5rem;
+    }
+
+    /* ── Section spacing ─────────────────────────────────── */
+    .section { margin-bottom: 3.5rem; }
+
+    /* ── Page title (h1) ─────────────────────────────────── */
+    .page-title {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      color: var(--ink);
+      margin-bottom: 0.5rem;
+    }
+    .page-subtitle {
+      font-size: 0.95rem;
+      color: var(--ink-mid);
+    }
+
+    /* ── Divider ─────────────────────────────────────────── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 2.5rem 0;
+    }
+
+    /* ── Insight sentences ───────────────────────────────── */
+    .insight-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .insight-list li {
+      font-size: 1.05rem;
+      color: var(--ink);
+      padding-left: 1.1rem;
+      border-left: 3px solid var(--green);
+      line-height: 1.5;
+    }
+
+    /* ── Section label ───────────────────────────────────── */
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 1.25rem;
+    }
+
+    /* ── KPI grid ────────────────────────────────────────── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .kpi {
+      padding: 1.25rem 1.5rem;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .kpi:last-child { border-right: none; }
+    .kpi__label {
+      font-size: 0.75rem;
+      color: var(--ink-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.4rem;
+    }
+    .kpi__value {
+      font-size: 2.1rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .kpi__unit {
+      font-size: 0.78rem;
+      color: var(--ink-mid);
+      margin-top: 0.3rem;
+    }
+    .kpi__delta {
+      font-size: 0.78rem;
+      margin-top: 0.5rem;
+      font-weight: 500;
+    }
+    .delta--pos { color: var(--up); }
+    .delta--neg { color: var(--down); }
+    .delta--neutral { color: var(--ink-faint); }
+
+    /* ── Chart section ───────────────────────────────────── */
+    .chart-block { margin-bottom: 3rem; }
+    .chart-block__title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 0.2rem;
+      letter-spacing: -0.01em;
+    }
+    .chart-block__note {
+      font-size: 0.8rem;
+      color: var(--ink-faint);
+      margin-bottom: 1rem;
+    }
+    .chart-block canvas {
+      width: 100% !important;
+      max-height: 240px;
+    }
+
+    /* ── Methodology note ────────────────────────────────── */
+    .method-note {
+      font-size: 0.8rem;
+      color: var(--ink-faint);
+      border-top: 1px solid var(--border);
+      padding-top: 1.5rem;
+      line-height: 1.7;
+    }
+    .method-note a { color: var(--ink-mid); }
+    .method-note a:hover { color: var(--ink); }
+
+    /* ── Responsive ──────────────────────────────────────── */
+    @media (max-width: 540px) {
+      html { font-size: 16px; }
+      .page-title { font-size: 1.65rem; }
+      .kpi__value { font-size: 1.75rem; }
+      .kpi-grid { grid-template-columns: 1fr 1fr; }
+      .kpi { border-right: none; }
+      .kpi:nth-child(odd) { border-right: 1px solid var(--border); }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <span class="site-header__title">Ireland Energy</span>
+  <span class="site-header__sub">Updated daily from public sources</span>
+</header>
+
+<main>
+
+  {# ── Page intro ─────────────────────────────────────── #}
+  <div class="section">
+    <h1 class="page-title">Grid &amp; fuel<br>this week</h1>
+    <p class="page-subtitle">
+      Wind on the grid, CO₂ intensity, and what it costs to drive &mdash;
+      tracked daily from EirGrid and AA Ireland.
+    </p>
+  </div>
+
+  {# ── Insights ───────────────────────────────────────── #}
+  {% if insights.insights %}
+  <div class="section">
+    <p class="section-label">What this means</p>
+    <ul class="insight-list">
+      {% for line in insights.insights %}
+      <li>{{ line }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <hr class="divider">
+
+  {# ── KPI numbers ────────────────────────────────────── #}
+  <div class="section">
+    <p class="section-label">Key numbers</p>
+    <div class="kpi-grid">
+
+    {% if insights.metrics['wind_pct_of_generation_daily_avg'] is defined %}
+    {% set wind = insights.metrics['wind_pct_of_generation_daily_avg'] %}
+    <div class="kpi">
+      <div class="kpi__label">Wind share</div>
+      <div class="kpi__value">{{ wind.latest_value | round(0) | int }}%</div>
+      <div class="kpi__unit">of generation (daily avg)</div>
+      {% if wind.week_over_week_delta is defined %}
+      {% set d = wind.week_over_week_delta %}
+      <div class="kpi__delta {{ 'delta--pos' if d >= 0 else 'delta--neg' }}">
+        {{ '+' if d >= 0 else '' }}{{ d | round(1) }}pp vs last week
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {% if insights.metrics['co2_intensity_daily_avg'] is defined %}
+    {% set co2 = insights.metrics['co2_intensity_daily_avg'] %}
+    <div class="kpi">
+      <div class="kpi__label">Grid CO₂ intensity</div>
+      <div class="kpi__value">{{ co2.latest_value | round(0) | int }}</div>
+      <div class="kpi__unit">gCO₂/kWh (daily avg)</div>
+      {% if co2.week_over_week_delta is defined %}
+      {% set d = co2.week_over_week_delta %}
+      {# Lower CO2 is better — negative delta (improvement) shown as positive colour #}
+      <div class="kpi__delta {{ 'delta--neg' if d >= 0 else 'delta--pos' }}">
+        {{ '+' if d >= 0 else '' }}{{ d | round(0) | int }} gCO₂ vs last week
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {% if insights.metrics['petrol_price_eur_per_litre'] is defined %}
+    {% set pet = insights.metrics['petrol_price_eur_per_litre'] %}
+    <div class="kpi">
+      <div class="kpi__label">Petrol pump price</div>
+      <div class="kpi__value">€{{ "%.3f"|format(pet.latest_value) }}</div>
+      <div class="kpi__unit">per litre</div>
+      {% if pet.week_over_week_delta is defined %}
+      {% set d = pet.week_over_week_delta %}
+      <div class="kpi__delta {{ 'delta--neg' if d >= 0 else 'delta--pos' }}">
+        {{ '+' if d >= 0 else '' }}€{{ "%.3f"|format(d) }} vs last week
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {% if insights.metrics['diesel_price_eur_per_litre'] is defined %}
+    {% set die = insights.metrics['diesel_price_eur_per_litre'] %}
+    <div class="kpi">
+      <div class="kpi__label">Diesel pump price</div>
+      <div class="kpi__value">€{{ "%.3f"|format(die.latest_value) }}</div>
+      <div class="kpi__unit">per litre</div>
+      {% if die.week_over_week_delta is defined %}
+      {% set d = die.week_over_week_delta %}
+      <div class="kpi__delta {{ 'delta--neg' if d >= 0 else 'delta--pos' }}">
+        {{ '+' if d >= 0 else '' }}€{{ "%.3f"|format(d) }} vs last week
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {% if insights.metrics['ev_cost_eur_per_100km'] is defined and insights.metrics['petrol_cost_eur_per_100km'] is defined %}
+    {% set ev = insights.metrics['ev_cost_eur_per_100km'] %}
+    {% set petcost = insights.metrics['petrol_cost_eur_per_100km'] %}
+    <div class="kpi">
+      <div class="kpi__label">EV / 100 km</div>
+      <div class="kpi__value">€{{ "%.2f"|format(ev.latest_value) }}</div>
+      <div class="kpi__unit">home charging &mdash; petrol is €{{ "%.2f"|format(petcost.latest_value) }}</div>
+    </div>
+    {% endif %}
+
+    {% if insights.metrics['solar_pct_of_generation_daily_avg'] is defined %}
+    {% set solar = insights.metrics['solar_pct_of_generation_daily_avg'] %}
+    <div class="kpi">
+      <div class="kpi__label">Solar share</div>
+      <div class="kpi__value">{{ solar.latest_value | round(1) }}%</div>
+      <div class="kpi__unit">of generation, daily avg</div>
+      {% if solar.week_over_week_delta is defined %}
+      {% set d = solar.week_over_week_delta %}
+      <div class="kpi__delta {{ 'delta--pos' if d >= 0 else 'delta--neg' }}">
+        {{ '+' if d >= 0 else '' }}{{ d | round(2) }}pp vs last week
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {% if insights.metrics['demand_mw_daily_avg'] is defined %}
+    {% set dem = insights.metrics['demand_mw_daily_avg'] %}
+    <div class="kpi">
+      <div class="kpi__label">System demand</div>
+      <div class="kpi__value">{{ dem.latest_value | round(0) | int }}</div>
+      <div class="kpi__unit">MW daily avg</div>
+      {% if dem.week_over_week_delta is defined %}
+      {% set d = dem.week_over_week_delta %}
+      <div class="kpi__delta delta--neutral">
+        {{ '+' if d >= 0 else '' }}{{ d | round(0) | int }} MW vs last week
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {% if insights.metrics['net_interconnection_mw_daily_avg'] is defined %}
+    {% set inter = insights.metrics['net_interconnection_mw_daily_avg'] %}
+    <div class="kpi">
+      <div class="kpi__label">Net interconnection</div>
+      <div class="kpi__value">{{ inter.latest_value | round(0) | int }}</div>
+      <div class="kpi__unit">MW daily avg &mdash; {{ 'importing' if inter.latest_value > 0 else 'exporting' }}</div>
+    </div>
+    {% endif %}
+
+    </div>{# /kpi-grid #}
+  </div>{# /section key numbers #}
+
+  <hr class="divider">
+
+  {# ── Charts ─────────────────────────────────────────── #}
+  <div class="section">
+    <p class="section-label">Trends</p>
+
+    {% if chart_data['wind_pct_of_generation_daily_avg'] is defined %}
+    <div class="chart-block">
+      <div class="chart-block__title">Wind as a share of electricity generation</div>
+      <div class="chart-block__note">Daily average, % of total generation (all-island)</div>
+      <canvas id="chart-wind"></canvas>
+    </div>
+    {% endif %}
+
+    {% if chart_data['co2_intensity_daily_avg'] is defined %}
+    <div class="chart-block">
+      <div class="chart-block__title">Grid CO₂ intensity</div>
+      <div class="chart-block__note">Daily average, grams of CO₂ per kWh generated</div>
+      <canvas id="chart-co2"></canvas>
+    </div>
+    {% endif %}
+
+    {% if chart_data['petrol_price_eur_per_litre'] is defined or chart_data['diesel_price_eur_per_litre'] is defined %}
+    <div class="chart-block">
+      <div class="chart-block__title">Pump prices at the forecourt</div>
+      <div class="chart-block__note">€ per litre &mdash; petrol and diesel, AA Ireland national average</div>
+      <canvas id="chart-fuel"></canvas>
+    </div>
+    {% endif %}
+
+    {% if chart_data['solar_pct_of_generation_daily_avg'] is defined %}
+    <div class="chart-block">
+      <div class="chart-block__title">Solar as a share of electricity generation</div>
+      <div class="chart-block__note">Daily average, % of total generation (all-island)</div>
+      <canvas id="chart-solar"></canvas>
+    </div>
+    {% endif %}
+
+    {% if chart_data['demand_mw_daily_avg'] is defined %}
+    <div class="chart-block">
+      <div class="chart-block__title">Electricity system demand</div>
+      <div class="chart-block__note">Daily average MW (all-island)</div>
+      <canvas id="chart-demand"></canvas>
+    </div>
+    {% endif %}
+
+    {% if chart_data['net_interconnection_mw_daily_avg'] is defined %}
+    <div class="chart-block">
+      <div class="chart-block__title">Net interconnection flow</div>
+      <div class="chart-block__note">Daily average MW &mdash; positive = importing, negative = exporting</div>
+      <canvas id="chart-inter"></canvas>
+    </div>
+    {% endif %}
+
+  </div>
+
+  {# ── Methodology ────────────────────────────────────── #}
+  <div class="method-note">
+    <strong>Sources &amp; assumptions</strong><br>
+    Grid data from <a href="https://www.smartgriddashboard.com/" target="_blank" rel="noopener">EirGrid Smart Grid Dashboard</a>
+    (15-min intervals, averaged to a daily figure).
+    Fuel prices from <a href="https://www.theaa.ie/aa-membership/fuel-prices/" target="_blank" rel="noopener">AA Ireland</a>
+    (published weekly).<br>
+    EV cost assumes 18 kWh/100 km at €0.40/kWh home charging.
+    Petrol cost assumes 6.5 L/100 km.
+    These are consistent assumptions held fixed week to week &mdash; useful for trends,
+    not exact for your specific car or tariff.
+  </div>
+
+</main>
+
+<script>
+// Shared chart style — deep-cloned per call to prevent Chart.js option mutation bleed.
+const _baseOptions = {
+  responsive: true,
+  maintainAspectRatio: true,
+  plugins: {
+    legend: { display: false },
+    tooltip: {
+      backgroundColor: '#111',
+      titleColor: '#fff',
+      bodyColor: '#ddd',
+      padding: 10,
+      cornerRadius: 4,
+    }
+  },
+  scales: {
+    x: {
+      grid: { display: false },
+      border: { color: '#e4e4e4' },
+      ticks: {
+        color: '#999',
+        font: { size: 11 },
+        maxTicksLimit: 7,
+        maxRotation: 0,
+      }
+    },
+    y: {
+      beginAtZero: false,
+      grid: { color: '#f0f0f0' },
+      border: { display: false },
+      ticks: {
+        color: '#999',
+        font: { size: 11 },
+        maxTicksLimit: 5,
+      }
+    }
+  },
+  elements: {
+    point: { radius: 0, hoverRadius: 4 },
+    line:  { borderWidth: 2, tension: 0.3, fill: false }
+  }
+};
+
+function makeChart(id, labels, data, color, opts) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const options = JSON.parse(JSON.stringify(Object.assign({}, _baseOptions, opts || {})));
+  new Chart(el, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{ data, borderColor: color }]
+    },
+    options
+  });
+}
+
+{% if chart_data['wind_pct_of_generation_daily_avg'] is defined %}
+makeChart(
+  'chart-wind',
+  {{ chart_data['wind_pct_of_generation_daily_avg'].labels | tojson }},
+  {{ chart_data['wind_pct_of_generation_daily_avg'].data   | tojson }},
+  '#1a7f4b'
+);
+{% endif %}
+
+{% if chart_data['co2_intensity_daily_avg'] is defined %}
+makeChart(
+  'chart-co2',
+  {{ chart_data['co2_intensity_daily_avg'].labels | tojson }},
+  {{ chart_data['co2_intensity_daily_avg'].data   | tojson }},
+  '#b45309'
+);
+{% endif %}
+
+{% if chart_data['petrol_price_eur_per_litre'] is defined or chart_data['diesel_price_eur_per_litre'] is defined %}
+(function () {
+  const el = document.getElementById('chart-fuel');
+  if (!el) return;
+
+  const datasets = [];
+  let labels = [];
+
+  {% if chart_data['petrol_price_eur_per_litre'] is defined %}
+  labels = {{ chart_data['petrol_price_eur_per_litre'].labels | tojson }};
+  datasets.push({
+    label: 'Petrol',
+    data:        {{ chart_data['petrol_price_eur_per_litre'].data | tojson }},
+    borderColor: '#1d4ed8',
+    tension: 0.3, fill: false, pointRadius: 0, hoverRadius: 4, borderWidth: 2
+  });
+  {% endif %}
+
+  {% if chart_data['diesel_price_eur_per_litre'] is defined %}
+  {% if chart_data['petrol_price_eur_per_litre'] is not defined %}
+  labels = {{ chart_data['diesel_price_eur_per_litre'].labels | tojson }};
+  {% endif %}
+  datasets.push({
+    label: 'Diesel',
+    data:        {{ chart_data['diesel_price_eur_per_litre'].data | tojson }},
+    borderColor: '#6d28d9',
+    tension: 0.3, fill: false, pointRadius: 0, hoverRadius: 4, borderWidth: 2
+  });
+  {% endif %}
+
+  const options = JSON.parse(JSON.stringify(_baseOptions));
+  options.plugins.legend = { display: true, position: 'top',
+    labels: { boxWidth: 12, font: { size: 11 }, color: '#555' } };
+
+  new Chart(el, { type: 'line', data: { labels, datasets }, options });
+})();
+{% endif %}
+
+{% if chart_data['solar_pct_of_generation_daily_avg'] is defined %}
+makeChart(
+  'chart-solar',
+  {{ chart_data['solar_pct_of_generation_daily_avg'].labels | tojson }},
+  {{ chart_data['solar_pct_of_generation_daily_avg'].data   | tojson }},
+  '#d97706'
+);
+{% endif %}
+
+{% if chart_data['demand_mw_daily_avg'] is defined %}
+makeChart(
+  'chart-demand',
+  {{ chart_data['demand_mw_daily_avg'].labels | tojson }},
+  {{ chart_data['demand_mw_daily_avg'].data   | tojson }},
+  '#0369a1'
+);
+{% endif %}
+
+{% if chart_data['net_interconnection_mw_daily_avg'] is defined %}
+(function () {
+  const el = document.getElementById('chart-inter');
+  if (!el) return;
+  const options = JSON.parse(JSON.stringify(_baseOptions));
+  new Chart(el, {
+    type: 'line',
+    data: {
+      labels: {{ chart_data['net_interconnection_mw_daily_avg'].labels | tojson }},
+      datasets: [{
+        data:        {{ chart_data['net_interconnection_mw_daily_avg'].data | tojson }},
+        borderColor: '#7c3aed',
+        fill: {
+          target: { value: 0 },
+          above: 'rgba(124,58,237,0.07)',
+          below: 'rgba(180,83,9,0.07)',
+        },
+        tension: 0.3, pointRadius: 0, hoverRadius: 4, borderWidth: 2
+      }]
+    },
+    options
+  });
+})();
+{% endif %}
+</script>
+
+</body>
+</html>

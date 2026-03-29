@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ireland Energy This Week</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:        #111;
+      --ink-mid:    #555;
+      --ink-faint:  #999;
+      --border:     #e4e4e4;
+      --bg:         #fff;
+      --green:      #1a7f4b;
+      --orange:     #b45309;
+      --blue:       #1d4ed8;
+      --purple:     #6d28d9;
+      --up:         #1a7f4b;
+      --down:       #b45309;
+    }
+
+    html { font-size: 17px; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                   "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Header ─────────────────────────────────────────── */
+    .site-header {
+      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: baseline;
+      gap: 1.25rem;
+    }
+    .site-header__title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+    .site-header__sub {
+      font-size: 0.82rem;
+      color: var(--ink-faint);
+    }
+
+    /* ── Page body ───────────────────────────────────────── */
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 3rem 1.25rem 5rem;
+    }
+
+    /* ── Section spacing ─────────────────────────────────── */
+    .section { margin-bottom: 3.5rem; }
+
+    /* ── Page title (h1) ─────────────────────────────────── */
+    .page-title {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      color: var(--ink);
+      margin-bottom: 0.5rem;
+    }
+    .page-subtitle {
+      font-size: 0.95rem;
+      color: var(--ink-mid);
+    }
+
+    /* ── Divider ─────────────────────────────────────────── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 2.5rem 0;
+    }
+
+    /* ── Insight sentences ───────────────────────────────── */
+    .insight-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .insight-list li {
+      font-size: 1.05rem;
+      color: var(--ink);
+      padding-left: 1.1rem;
+      border-left: 3px solid var(--green);
+      line-height: 1.5;
+    }
+
+    /* ── Section label ───────────────────────────────────── */
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 1.25rem;
+    }
+
+    /* ── KPI grid ────────────────────────────────────────── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .kpi {
+      padding: 1.25rem 1.5rem;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .kpi:last-child { border-right: none; }
+    .kpi__label {
+      font-size: 0.75rem;
+      color: var(--ink-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.4rem;
+    }
+    .kpi__value {
+      font-size: 2.1rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .kpi__unit {
+      font-size: 0.78rem;
+      color: var(--ink-mid);
+      margin-top: 0.3rem;
+    }
+    .kpi__delta {
+      font-size: 0.78rem;
+      margin-top: 0.5rem;
+      font-weight: 500;
+    }
+    .delta--pos { color: var(--up); }
+    .delta--neg { color: var(--down); }
+    .delta--neutral { color: var(--ink-faint); }
+
+    /* ── Chart section ───────────────────────────────────── */
+    .chart-block { margin-bottom: 3rem; }
+    .chart-block__title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 0.2rem;
+      letter-spacing: -0.01em;
+    }
+    .chart-block__note {
+      font-size: 0.8rem;
+      color: var(--ink-faint);
+      margin-bottom: 1rem;
+    }
+    .chart-block canvas {
+      width: 100% !important;
+      max-height: 240px;
+    }
+
+    /* ── Methodology note ────────────────────────────────── */
+    .method-note {
+      font-size: 0.8rem;
+      color: var(--ink-faint);
+      border-top: 1px solid var(--border);
+      padding-top: 1.5rem;
+      line-height: 1.7;
+    }
+    .method-note a { color: var(--ink-mid); }
+    .method-note a:hover { color: var(--ink); }
+
+    /* ── Responsive ──────────────────────────────────────── */
+    @media (max-width: 540px) {
+      html { font-size: 16px; }
+      .page-title { font-size: 1.65rem; }
+      .kpi__value { font-size: 1.75rem; }
+      .kpi-grid { grid-template-columns: 1fr 1fr; }
+      .kpi { border-right: none; }
+      .kpi:nth-child(odd) { border-right: 1px solid var(--border); }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <span class="site-header__title">Ireland Energy</span>
+  <span class="site-header__sub">Updated daily from public sources</span>
+</header>
+
+<main>
+
+  
+  <div class="section">
+    <h1 class="page-title">Grid &amp; fuel<br>this week</h1>
+    <p class="page-subtitle">
+      Wind on the grid, CO₂ intensity, and what it costs to drive &mdash;
+      tracked daily from EirGrid and AA Ireland.
+    </p>
+  </div>
+
+  
+  
+  <div class="section">
+    <p class="section-label">What this means</p>
+    <ul class="insight-list">
+      
+      <li>EV (home charging at €0.40/kWh) costs €7.20/100km vs €11.77/100km for petrol — 39% cheaper.</li>
+      
+    </ul>
+  </div>
+  
+
+  <hr class="divider">
+
+  
+  <div class="section">
+    <p class="section-label">Key numbers</p>
+    <div class="kpi-grid">
+
+    
+
+    
+
+    
+    
+    <div class="kpi">
+      <div class="kpi__label">Petrol pump price</div>
+      <div class="kpi__value">€1.810</div>
+      <div class="kpi__unit">per litre</div>
+      
+    </div>
+    
+
+    
+    
+    <div class="kpi">
+      <div class="kpi__label">Diesel pump price</div>
+      <div class="kpi__value">€1.900</div>
+      <div class="kpi__unit">per litre</div>
+      
+    </div>
+    
+
+    
+    
+    
+    <div class="kpi">
+      <div class="kpi__label">EV / 100 km</div>
+      <div class="kpi__value">€7.20</div>
+      <div class="kpi__unit">home charging &mdash; petrol is €11.77</div>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  
+  <div class="section">
+    <p class="section-label">Trends</p>
+
+    
+
+    
+
+    
+    <div class="chart-block">
+      <div class="chart-block__title">Pump prices at the forecourt</div>
+      <div class="chart-block__note">€ per litre &mdash; petrol and diesel, AA Ireland national average</div>
+      <canvas id="chart-fuel"></canvas>
+    </div>
+    
+
+    
+
+    
+
+    
+
+  </div>
+
+  
+  <div class="method-note">
+    <strong>Sources &amp; assumptions</strong><br>
+    Grid data from <a href="https://www.smartgriddashboard.com/" target="_blank" rel="noopener">EirGrid Smart Grid Dashboard</a>
+    (15-min intervals, averaged to a daily figure).
+    Fuel prices from <a href="https://www.theaa.ie/aa-membership/fuel-prices/" target="_blank" rel="noopener">AA Ireland</a>
+    (published weekly).<br>
+    EV cost assumes 18 kWh/100 km at €0.40/kWh home charging.
+    Petrol cost assumes 6.5 L/100 km.
+    These are consistent assumptions held fixed week to week &mdash; useful for trends,
+    not exact for your specific car or tariff.
+  </div>
+
+</main>
+
+<script>
+// Shared chart style — deep-cloned per call to prevent Chart.js option mutation bleed.
+const _baseOptions = {
+  responsive: true,
+  maintainAspectRatio: true,
+  plugins: {
+    legend: { display: false },
+    tooltip: {
+      backgroundColor: '#111',
+      titleColor: '#fff',
+      bodyColor: '#ddd',
+      padding: 10,
+      cornerRadius: 4,
+    }
+  },
+  scales: {
+    x: {
+      grid: { display: false },
+      border: { color: '#e4e4e4' },
+      ticks: {
+        color: '#999',
+        font: { size: 11 },
+        maxTicksLimit: 7,
+        maxRotation: 0,
+      }
+    },
+    y: {
+      beginAtZero: false,
+      grid: { color: '#f0f0f0' },
+      border: { display: false },
+      ticks: {
+        color: '#999',
+        font: { size: 11 },
+        maxTicksLimit: 5,
+      }
+    }
+  },
+  elements: {
+    point: { radius: 0, hoverRadius: 4 },
+    line:  { borderWidth: 2, tension: 0.3, fill: false }
+  }
+};
+
+function makeChart(id, labels, data, color, opts) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const options = JSON.parse(JSON.stringify(Object.assign({}, _baseOptions, opts || {})));
+  new Chart(el, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{ data, borderColor: color }]
+    },
+    options
+  });
+}
+
+
+
+
+
+
+(function () {
+  const el = document.getElementById('chart-fuel');
+  if (!el) return;
+
+  const datasets = [];
+  let labels = [];
+
+  
+  labels = ["2026-03-29"];
+  datasets.push({
+    label: 'Petrol',
+    data:        [1.81],
+    borderColor: '#1d4ed8',
+    tension: 0.3, fill: false, pointRadius: 0, hoverRadius: 4, borderWidth: 2
+  });
+  
+
+  
+  
+  datasets.push({
+    label: 'Diesel',
+    data:        [1.9],
+    borderColor: '#6d28d9',
+    tension: 0.3, fill: false, pointRadius: 0, hoverRadius: 4, borderWidth: 2
+  });
+  
+
+  const options = JSON.parse(JSON.stringify(_baseOptions));
+  options.plugins.legend = { display: true, position: 'top',
+    labels: { boxWidth: 12, font: { size: 11 }, color: '#555' } };
+
+  new Chart(el, { type: 'line', data: { labels, datasets }, options });
+})();
+
+
+
+
+
+
+
+</script>
+
+</body>
+</html>
