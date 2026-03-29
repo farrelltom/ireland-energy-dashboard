@@ -234,11 +234,17 @@ def _build_tariff_comparison() -> dict:
     if not rows:
         return {"suppliers": [], "cheapest": None, "annual_kwh_assumed": _ANNUAL_KWH}
 
-    # Keep only the most recent row per supplier
+    # Keep only the most recent row per supplier.
+    # Tie-break: scraped sources beat "manual" on the same date.
     latest: dict[str, dict] = {}
     for row in rows:
         supplier = row["supplier"]
-        if supplier not in latest or row["date"] > latest[supplier]["date"]:
+        existing = latest.get(supplier)
+        if existing is None:
+            latest[supplier] = row
+        elif row["date"] > existing["date"]:
+            latest[supplier] = row
+        elif row["date"] == existing["date"] and existing.get("source") == "manual" and row.get("source") != "manual":
             latest[supplier] = row
 
     suppliers = []

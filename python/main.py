@@ -22,6 +22,7 @@ import render
 from pipeline import DailyReading, is_raw_valid
 from sources.aa_fuel import AAFuelAdapter
 from sources.eirgrid import EirGridAdapter
+from sources.energia import EnergiaAdapter
 
 logging.basicConfig(
     level=logging.INFO,
@@ -36,7 +37,7 @@ def run(d: date) -> int:
     adapters = [EirGridAdapter(), AAFuelAdapter()]
     readings: list[DailyReading] = []
 
-    # --- Fetch + Parse (per-source isolation) ---
+    # --- Fetch + Parse: series data (per-source isolation) ---
     for adapter in adapters:
         # Fetch
         if not is_raw_valid(adapter.name, d, adapter.raw_suffix):
@@ -66,6 +67,35 @@ def run(d: date) -> int:
             canonical.upsert(readings)
         except Exception as exc:
             logger.error("Upsert failed: %s", exc)
+            return 1
+
+    # --- Fetch + Parse: tariff data ---
+    tariff_adapters = [EnergiaAdapter()]
+    tariff_rows: list[dict] = []
+
+    for adapter in tariff_adapters:
+        if not is_raw_valid(adapter.name, d, adapter.raw_suffix):
+            logger.info("[%s] No valid raw file for %s — fetching", adapter.name, d)
+            try:
+                adapter.fetch(d)
+            except Exception as exc:
+                logger.warning("[%s] Fetch failed: %s — skipping source", adapter.name, exc)
+                continue
+        else:
+            logger.info("[%s] Valid raw file exists for %s — skipping fetch", adapter.name, d)
+
+        try:
+            rows = adapter.parse(d)
+            logger.info("[%s] Parsed %d tariff row(s) for %s", adapter.name, len(rows), d)
+            tariff_rows.extend(rows)
+        except Exception as exc:
+            logger.warning("[%s] Parse failed: %s — continuing without this source", adapter.name, exc)
+
+    if tariff_rows:
+        try:
+            canonical.upsert_tariffs(tariff_rows)
+        except Exception as exc:
+            logger.error("Tariff upsert failed: %s", exc)
             return 1
 
     # --- Analytics ---

@@ -66,6 +66,34 @@ class SourceAdapter(Protocol):
         ...
 
 
+class TariffAdapter(Protocol):
+    """Interface for adapters that produce supplier tariff rows.
+
+    Separate from SourceAdapter because the output schema is fundamentally
+    different: each row is a dict matching canonical.TARIFF_FIELDNAMES rather
+    than a DailyReading scalar.
+
+    Adapters are responsible for:
+      - writing raw files atomically via atomic_write()
+      - deleting their own raw file if parse() fails (so the next run re-fetches)
+    """
+
+    name: str
+    raw_suffix: str
+
+    def fetch(self, d: date) -> None:
+        """Fetch source data for date d and write it to raw_path(self.name, d, self.raw_suffix)."""
+        ...
+
+    def parse(self, d: date) -> list[dict]:
+        """Read the raw file for date d and return tariff dicts.
+
+        Each dict must match canonical.TARIFF_FIELDNAMES.
+        If parsing fails, delete the raw file and raise.
+        """
+        ...
+
+
 # ---------------------------------------------------------------------------
 # Path helpers
 # ---------------------------------------------------------------------------
