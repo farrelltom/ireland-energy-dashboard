@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import json
 import logging
+import time
 from datetime import date, datetime, timezone
 
 import requests
@@ -40,6 +41,16 @@ RAW_SUFFIX = ".json"
 
 _BASE_URL = "https://www.smartgriddashboard.com/DashboardService.svc/data"
 _TIMEOUT = 30  # seconds
+_RETRY_ATTEMPTS = 3
+
+_AREAS = {
+    "wind": "windactual",
+    "generation": "generationactual",
+    "co2": "co2intensity",
+    "solar": "solaractual",
+    "demand": "demandactual",
+    "interconnection": "interconnection",
+}
 
 
 def _eirgrid_date_range(d: date) -> tuple[str, str]:
@@ -50,16 +61,37 @@ def _eirgrid_date_range(d: date) -> tuple[str, str]:
 
 def _fetch_area(area: str, d: date) -> dict:
     datefrom, dateto = _eirgrid_date_range(d)
-    resp = requests.get(
-        _BASE_URL,
-        params={"area": area, "region": "ALL", "datefrom": datefrom, "dateto": dateto},
-        timeout=_TIMEOUT,
-    )
-    resp.raise_for_status()
-    data = resp.json()
-    if data.get("ErrorMessage"):
-        raise ValueError(f"EirGrid API error for area '{area}': {data['ErrorMessage']}")
-    return data
+    last_error: Exception | None = None
+
+    for attempt in range(1, _RETRY_ATTEMPTS + 1):
+        try:
+            resp = requests.get(
+                _BASE_URL,
+                params={"area": area, "region": "ALL", "datefrom": datefrom, "dateto": dateto},
+                timeout=_TIMEOUT,
+                headers={"User-Agent": "ireland-energy-dashboard/1.0"},
+            )
+            resp.raise_for_status()
+            data = resp.json()
+            if data.get("ErrorMessage"):
+                raise ValueError(f"EirGrid API error for area '{area}': {data['ErrorMessage']}")
+            return data
+        except Exception as exc:
+            last_error = exc
+            if attempt < _RETRY_ATTEMPTS:
+                sleep_s = 2 ** (attempt - 1)
+                logger.warning(
+                    "EirGrid: %s fetch attempt %d/%d failed (%s); retrying in %ss",
+                    area,
+                    attempt,
+                    _RETRY_ATTEMPTS,
+                    exc,
+                    sleep_s,
+                )
+                time.sleep(sleep_s)
+
+    assert last_error is not None
+    raise last_error
 
 
 class EirGridAdapter:
@@ -67,70 +99,73 @@ class EirGridAdapter:
     raw_suffix = RAW_SUFFIX
 
     def fetch(self, d: date) -> None:
-        """Fetch all six EirGrid areas for date d.
+        """Fetch EirGrid areas for date d with per-area resilience.
 
-        Saves all responses together in a single raw JSON file atomically.
-        Raises on any network or API error.
+        Saves all successful area responses in one raw JSON file atomically,
+        plus an `errors` map for failed areas. Raises only when every area
+        failed, so partial data can still flow through parse().
         """
         logger.info("EirGrid: fetching data for %s", d)
-        wind_data  = _fetch_area("windactual",       d)
-        gen_data   = _fetch_area("generationactual", d)
-        co2_data   = _fetch_area("co2intensity",     d)
-        solar_data = _fetch_area("solaractual",      d)
-        dem_data   = _fetch_area("demandactual",     d)
-        inter_data = _fetch_area("interconnection",  d)
+        fetched: dict[str, dict] = {}
+        errors: dict[str, str] = {}
+
+        for key, area in _AREAS.items():
+            try:
+                fetched[key] = _fetch_area(area, d)
+            except Exception as exc:
+                errors[key] = str(exc)
+                logger.warning("EirGrid: area %s failed for %s (%s)", area, d, exc)
+
+        if not fetched:
+            raise RuntimeError(f"EirGrid: all areas failed for {d}: {errors}")
 
         raw = {
             "fetched_at": datetime.now(tz=timezone.utc).isoformat(),
             "date": d.isoformat(),
-            "wind":          wind_data,
-            "generation":    gen_data,
-            "co2":           co2_data,
-            "solar":         solar_data,
-            "demand":        dem_data,
-            "interconnection": inter_data,
+            **fetched,
+            "errors": errors,
         }
         path = raw_path(NAME, d, RAW_SUFFIX)
         atomic_write(path, json.dumps(raw, indent=2))
-        logger.info("EirGrid: raw saved to %s", path)
+        logger.info(
+            "EirGrid: raw saved to %s (areas ok=%d failed=%d)",
+            path,
+            len(fetched),
+            len(errors),
+        )
 
     def parse(self, d: date) -> list[DailyReading]:
         """Parse the raw file for date d into DailyReading instances.
 
-        Returns up to five readings. Older raw files missing the solar/demand/
-        interconnection keys are handled gracefully — those metrics are simply
-        omitted. If the core wind/co2 fields are corrupt, deletes the raw file
-        so the next run re-fetches.
+        Returns up to five readings based on whichever areas were fetched
+        successfully. Missing areas are tolerated and only the corresponding
+        metrics are omitted. If no metric can be computed, raises so the raw
+        file is deleted and the next run re-fetches.
         """
         path = raw_path(NAME, d, RAW_SUFFIX)
         try:
             with path.open(encoding="utf-8") as f:
                 raw = json.load(f)
 
-            # Core metrics (required — fail fast if missing)
-            wind_pct = _compute_pct_of_generation(
-                raw["wind"]["Rows"], raw["generation"]["Rows"]
-            )
-            co2_avg = _compute_avg(raw["co2"]["Rows"], "CO2_INTENSITY")
-
-            # New metrics (optional — missing keys → no reading, not an error)
+            # Rows by area (missing keys are expected under partial fetch mode).
+            wind_rows = raw.get("wind", {}).get("Rows", [])
+            gen_rows = raw.get("generation", {}).get("Rows", [])
+            co2_rows = raw.get("co2", {}).get("Rows", [])
             solar_rows = raw.get("solar", {}).get("Rows", [])
-            solar_pct = (
-                _compute_pct_of_generation(solar_rows, raw["generation"]["Rows"])
-                if solar_rows else None
-            )
-
             demand_rows = raw.get("demand", {}).get("Rows", [])
-            demand_avg = (
-                _compute_avg(demand_rows, "SYSTEM_DEMAND")
-                if demand_rows else None
-            )
-
             inter_rows = raw.get("interconnection", {}).get("Rows", [])
-            inter_avg = (
-                _compute_avg(inter_rows, "INTER_NET")
-                if inter_rows else None
+
+            wind_pct = (
+                _compute_pct_of_generation(wind_rows, gen_rows)
+                if wind_rows and gen_rows else None
             )
+            co2_avg = _compute_avg(co2_rows, "CO2_INTENSITY") if co2_rows else None
+            solar_pct = (
+                _compute_pct_of_generation(solar_rows, gen_rows)
+                if solar_rows and gen_rows else None
+            )
+            demand_avg = _compute_avg(demand_rows, "SYSTEM_DEMAND") if demand_rows else None
+            inter_avg = _compute_avg(inter_rows, "INTER_NET") if inter_rows else None
 
             readings: list[DailyReading] = []
 
@@ -167,6 +202,13 @@ class EirGridAdapter:
                     date=d, metric="net_interconnection_mw_daily_avg",
                     value=round(inter_avg, 1), unit="MW", source=NAME,
                 ))
+
+            if not readings:
+                errors = raw.get("errors")
+                raise ValueError(
+                    f"EirGrid: no metrics computable for {d}. "
+                    f"Available keys={list(raw.keys())}; errors={errors}"
+                )
 
             return readings
 

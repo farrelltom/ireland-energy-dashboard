@@ -1,11 +1,12 @@
 {
-  "series_csv_sha256": "196fe45ce03e61d9456b1fe9b1d00aa40533df10c944ffd0ba76d25bb2b9792a",
+  "series_csv_sha256": "98ee2700a424ba0565977c7c45f494e6ddc06c1793485d3c53d845f6372cf24a",
   "tariffs_csv_sha256": "57be4aa722855f4c7a8a4ec2f6924d16c0cf036757ee6dc5587a01fdbf8013ab",
   "page_latest_date": "2026-03-30",
   "headline": "EV home charging costs 39% less per 100\u202fkm than petrol at current pump prices.",
   "changes": [],
   "chart_insights": {
-    "petrol_price_eur_per_litre": "Pump prices are unchanged from last week."
+    "petrol_price_eur_per_litre": "Pump prices are unchanged from last week.",
+    "net_interconnection_mw_daily_avg": "Ireland is drawing around 898\u202fMW from interconnectors \u2014 a net importer yesterday."
   },
   "tariff_comparison": {
     "suppliers": [
@@ -85,6 +86,11 @@
       "latest_date": "2026-03-30",
       "unit": "\u20ac/litre"
     },
+    "net_interconnection_mw_daily_avg": {
+      "latest_value": 898.3,
+      "latest_date": "2026-03-30",
+      "unit": "MW"
+    },
     "ev_cost_eur_per_100km": {
       "latest_value": 7.2,
       "latest_date": "2026-03-30",
@@ -105,6 +111,7 @@
     }
   },
   "insights": [
+    "Ireland was a net importer of electricity yesterday, drawing an average of 898 MW from interconnectors.",
     "EV (home charging at \u20ac0.40/kWh) costs \u20ac7.20/100km vs \u20ac11.77/100km for petrol \u2014 39% cheaper."
   ]
 }

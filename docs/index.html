@@ -364,6 +364,13 @@
     
 
     
+    
+    <div class="kpi">
+      <div class="kpi__label">Net interconnection</div>
+      <div class="kpi__value">898</div>
+      <div class="kpi__unit">MW daily avg &mdash; importing</div>
+    </div>
+    
 
     </div>
   </div>
@@ -373,6 +380,8 @@
   <div class="section">
     <p class="section-label">More context</p>
     <ul class="insight-list">
+      
+      <li>Ireland was a net importer of electricity yesterday, drawing an average of 898 MW from interconnectors.</li>
       
       <li>EV (home charging at €0.40/kWh) costs €7.20/100km vs €11.77/100km for petrol — 39% cheaper.</li>
       
@@ -505,6 +514,15 @@
     
 
     
+    <div class="chart-block">
+      <div class="chart-block__title">Net interconnection flow</div>
+      <div class="chart-block__note">Daily average MW &mdash; positive = importing, negative = exporting</div>
+      
+      <div class="chart-block__callout">Ireland is drawing around 898 MW from interconnectors — a net importer yesterday.</div>
+      
+      <canvas id="chart-inter"></canvas>
+    </div>
+    
 
   </div>
 
@@ -625,6 +643,29 @@ function makeChart(id, labels, data, color, opts) {
 
 
 
+
+(function () {
+  const el = document.getElementById('chart-inter');
+  if (!el) return;
+  const options = JSON.parse(JSON.stringify(_baseOptions));
+  new Chart(el, {
+    type: 'line',
+    data: {
+      labels: ["2026-03-30"],
+      datasets: [{
+        data:        [898.3],
+        borderColor: '#7c3aed',
+        fill: {
+          target: { value: 0 },
+          above: 'rgba(124,58,237,0.07)',
+          below: 'rgba(180,83,9,0.07)',
+        },
+        tension: 0.3, pointRadius: 0, hoverRadius: 4, borderWidth: 2
+      }]
+    },
+    options
+  });
+})();
 
 </script>
 
