@@ -277,7 +277,7 @@
 
 <header class="site-header">
   <span class="site-header__title">Ireland Energy</span>
-  <span class="site-header__sub">Updated daily from public sources &mdash; data to 2026-03-30</span>
+  <span class="site-header__sub">Updated daily from public sources &mdash; data to 2026-03-31</span>
 </header>
 
 <main>
@@ -362,12 +362,20 @@
     
 
     
+    
+    <div class="kpi">
+      <div class="kpi__label">System demand</div>
+      <div class="kpi__value">4376</div>
+      <div class="kpi__unit">MW daily avg</div>
+      
+    </div>
+    
 
     
     
     <div class="kpi">
       <div class="kpi__label">Net interconnection</div>
-      <div class="kpi__value">898</div>
+      <div class="kpi__value">1005</div>
       <div class="kpi__unit">MW daily avg &mdash; importing</div>
     </div>
     
@@ -381,7 +389,9 @@
     <p class="section-label">More context</p>
     <ul class="insight-list">
       
-      <li>Ireland was a net importer of electricity yesterday, drawing an average of 898 MW from interconnectors.</li>
+      <li>System demand averaged 4376 MW yesterday.</li>
+      
+      <li>Ireland was a net importer of electricity yesterday, drawing an average of 1005 MW from interconnectors.</li>
       
       <li>EV (home charging at €0.40/kWh) costs €7.20/100km vs €11.77/100km for petrol — 39% cheaper.</li>
       
@@ -512,13 +522,19 @@
     
 
     
+    <div class="chart-block">
+      <div class="chart-block__title">Electricity system demand</div>
+      <div class="chart-block__note">Daily average MW (all-island)</div>
+      <canvas id="chart-demand"></canvas>
+    </div>
+    
 
     
     <div class="chart-block">
       <div class="chart-block__title">Net interconnection flow</div>
       <div class="chart-block__note">Daily average MW &mdash; positive = importing, negative = exporting</div>
       
-      <div class="chart-block__callout">Ireland is drawing around 898 MW from interconnectors — a net importer yesterday.</div>
+      <div class="chart-block__callout">Ireland is drawing around 1005 MW from interconnectors — a net importer yesterday.</div>
       
       <canvas id="chart-inter"></canvas>
     </div>
@@ -612,10 +628,10 @@ function makeChart(id, labels, data, color, opts) {
   let labels = [];
 
   
-  labels = ["2025-08-26", "2025-09-12", "2025-11-06", "2025-12-03", "2025-12-11", "2026-01-05", "2026-01-20", "2026-03-29", "2026-03-30"];
+  labels = ["2025-08-26", "2025-09-12", "2025-11-06", "2025-12-03", "2025-12-11", "2026-01-05", "2026-01-20", "2026-03-29", "2026-03-30", "2026-03-31"];
   datasets.push({
     label: 'Petrol',
-    data:        [1.7278, 1.6966, 1.72, 1.72, 1.74, 1.74, 1.7, 1.81, 1.81],
+    data:        [1.7278, 1.6966, 1.72, 1.72, 1.74, 1.74, 1.7, 1.81, 1.81, 1.81],
     borderColor: '#1d4ed8',
     tension: 0.3, fill: false, pointRadius: 0, hoverRadius: 4, borderWidth: 2
   });
@@ -625,7 +641,7 @@ function makeChart(id, labels, data, color, opts) {
   
   datasets.push({
     label: 'Diesel',
-    data:        [1.6937, 1.6766, 1.68, 1.68, 1.72, 1.73, 1.69, 1.9, 1.9],
+    data:        [1.6937, 1.6766, 1.68, 1.68, 1.72, 1.73, 1.69, 1.9, 1.9, 1.9],
     borderColor: '#6d28d9',
     tension: 0.3, fill: false, pointRadius: 0, hoverRadius: 4, borderWidth: 2
   });
@@ -642,6 +658,13 @@ function makeChart(id, labels, data, color, opts) {
 
 
 
+makeChart(
+  'chart-demand',
+  ["2026-03-31"],
+  [4375.5],
+  '#0369a1'
+);
+
 
 
 (function () {
@@ -651,9 +674,9 @@ function makeChart(id, labels, data, color, opts) {
   new Chart(el, {
     type: 'line',
     data: {
-      labels: ["2026-03-30"],
+      labels: ["2026-03-30", "2026-03-31"],
       datasets: [{
-        data:        [898.3],
+        data:        [898.3, 1005.3],
         borderColor: '#7c3aed',
         fill: {
           target: { value: 0 },
