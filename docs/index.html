@@ -277,7 +277,7 @@
 
 <header class="site-header">
   <span class="site-header__title">Ireland Energy</span>
-  <span class="site-header__sub">Updated daily from public sources &mdash; data to 2026-04-01</span>
+  <span class="site-header__sub">Updated daily from public sources &mdash; data to 2026-04-02</span>
 </header>
 
 <main>
@@ -288,6 +288,14 @@
     
     <p class="headline">EV home charging costs 39% less per 100 km than petrol at current pump prices.</p>
     
+    
+    <div class="changes-row">
+      
+      <span class="change-pill change-pill--bad">↑ €0.000/L&thinsp;Petrol</span>
+      
+      <span class="change-pill change-pill--bad">↑ €0.000/L&thinsp;Diesel</span>
+      
+    </div>
     
   </div>
 
@@ -344,6 +352,11 @@
       <div class="kpi__value">€1.810</div>
       <div class="kpi__unit">per litre</div>
       
+      
+      <div class="kpi__delta delta--neg">
+        +€0.000 vs last week
+      </div>
+      
     </div>
     
 
@@ -353,6 +366,11 @@
       <div class="kpi__label">Diesel pump price</div>
       <div class="kpi__value">€1.900</div>
       <div class="kpi__unit">per litre</div>
+      
+      
+      <div class="kpi__delta delta--neg">
+        +€0.000 vs last week
+      </div>
       
     </div>
     
@@ -365,7 +383,7 @@
     
     <div class="kpi">
       <div class="kpi__label">System demand</div>
-      <div class="kpi__value">4376</div>
+      <div class="kpi__value">4598</div>
       <div class="kpi__unit">MW daily avg</div>
       
     </div>
@@ -389,7 +407,7 @@
     <p class="section-label">More context</p>
     <ul class="insight-list">
       
-      <li>System demand averaged 4376 MW yesterday.</li>
+      <li>System demand averaged 4598 MW yesterday.</li>
       
       <li>Ireland was a net importer of electricity yesterday, drawing an average of 830 MW from interconnectors.</li>
       
@@ -628,10 +646,10 @@ function makeChart(id, labels, data, color, opts) {
   let labels = [];
 
   
-  labels = ["2025-08-26", "2025-09-12", "2025-11-06", "2025-12-03", "2025-12-11", "2026-01-05", "2026-01-20", "2026-03-29", "2026-03-30", "2026-03-31", "2026-04-01"];
+  labels = ["2025-08-26", "2025-09-12", "2025-11-06", "2025-12-03", "2025-12-11", "2026-01-05", "2026-01-20", "2026-03-29", "2026-03-30", "2026-03-31", "2026-04-01", "2026-04-02"];
   datasets.push({
     label: 'Petrol',
-    data:        [1.7278, 1.6966, 1.72, 1.72, 1.74, 1.74, 1.7, 1.81, 1.81, 1.81, 1.81],
+    data:        [1.7278, 1.6966, 1.72, 1.72, 1.74, 1.74, 1.7, 1.81, 1.81, 1.81, 1.81, 1.81],
     borderColor: '#1d4ed8',
     tension: 0.3, fill: false, pointRadius: 0, hoverRadius: 4, borderWidth: 2
   });
@@ -641,7 +659,7 @@ function makeChart(id, labels, data, color, opts) {
   
   datasets.push({
     label: 'Diesel',
-    data:        [1.6937, 1.6766, 1.68, 1.68, 1.72, 1.73, 1.69, 1.9, 1.9, 1.9, 1.9],
+    data:        [1.6937, 1.6766, 1.68, 1.68, 1.72, 1.73, 1.69, 1.9, 1.9, 1.9, 1.9, 1.9],
     borderColor: '#6d28d9',
     tension: 0.3, fill: false, pointRadius: 0, hoverRadius: 4, borderWidth: 2
   });
@@ -660,8 +678,8 @@ function makeChart(id, labels, data, color, opts) {
 
 makeChart(
   'chart-demand',
-  ["2026-03-31"],
-  [4375.5],
+  ["2026-03-31", "2026-04-02"],
+  [4375.5, 4598.2],
   '#0369a1'
 );
 
