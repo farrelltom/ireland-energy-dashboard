@@ -277,7 +277,7 @@
 
 <header class="site-header">
   <span class="site-header__title">Ireland Energy</span>
-  <span class="site-header__sub">Updated daily from public sources &mdash; data to 2026-04-03</span>
+  <span class="site-header__sub">Updated daily from public sources &mdash; data to 2026-04-04</span>
 </header>
 
 <main>
@@ -286,7 +286,7 @@
   <div class="section">
     <h1 class="page-title">Ireland's energy<br>this week</h1>
     
-    <p class="headline">EV home charging costs 39% less per 100 km than petrol at current pump prices.</p>
+    <p class="headline">EV home charging costs 39% less per 100 km than petrol at current pump prices — and wind supplied 24% of Ireland’s electricity yesterday.</p>
     
     
     <div class="changes-row">
@@ -342,7 +342,23 @@
     <div class="kpi-grid">
 
     
+    
+    <div class="kpi">
+      <div class="kpi__label">Wind share</div>
+      <div class="kpi__value">24%</div>
+      <div class="kpi__unit">of generation (daily avg)</div>
+      
+    </div>
+    
 
+    
+    
+    <div class="kpi">
+      <div class="kpi__label">Grid CO₂ intensity</div>
+      <div class="kpi__value">182</div>
+      <div class="kpi__unit">gCO₂/kWh (daily avg)</div>
+      
+    </div>
     
 
     
@@ -407,7 +423,11 @@
     <p class="section-label">More context</p>
     <ul class="insight-list">
       
-      <li>System demand averaged 4598 MW yesterday.</li>
+      <li>Wind provided 24% of Irish electricity generation yesterday.</li>
+      
+      <li>Grid CO₂ intensity averaged 182 gCO₂/kWh yesterday.</li>
+      
+      <li>System demand averaged 4598 MW yesterday (wind supplied roughly 1093 MW of that).</li>
       
       <li>Ireland was a net importer of electricity yesterday, drawing an average of 294 MW from interconnectors.</li>
       
@@ -453,24 +473,24 @@
         
         
         <tr class="">
-          <td>Energia</td>
-          <td style="color:var(--ink-faint);font-size:0.85rem">New (27% off)</td>
-          <td style="color:var(--ink-faint)">Standard 24hr</td>
-          <td><span class="rate-value">€0.307</span><span style="font-size:0.75rem;color:var(--ink-faint)">/kWh</span></td>
-          <td>€265/yr</td>
-          <td>€1556/yr</td>
-          <td class="cheapest-badge"></td>
-        </tr>
-        
-        
-        
-        <tr class="">
           <td>SSE Airtricity</td>
           <td style="color:var(--ink-faint);font-size:0.85rem">New (25% off)</td>
           <td style="color:var(--ink-faint)">Standard 24hr</td>
           <td><span class="rate-value">€0.308</span><span style="font-size:0.75rem;color:var(--ink-faint)">/kWh</span></td>
           <td>€263/yr</td>
           <td>€1559/yr</td>
+          <td class="cheapest-badge"></td>
+        </tr>
+        
+        
+        
+        <tr class="">
+          <td>Energia</td>
+          <td style="color:var(--ink-faint);font-size:0.85rem">New (15% off)</td>
+          <td style="color:var(--ink-faint)">Standard 24hr</td>
+          <td><span class="rate-value">€0.358</span><span style="font-size:0.75rem;color:var(--ink-faint)">/kWh</span></td>
+          <td>€265/yr</td>
+          <td>€1769/yr</td>
           <td class="cheapest-badge"></td>
         </tr>
         
@@ -523,7 +543,25 @@
     <p class="section-label">Trends</p>
 
     
+    <div class="chart-block">
+      <div class="chart-block__title">Wind as a share of electricity generation</div>
+      <div class="chart-block__note">Daily average, % of total generation (all-island)</div>
+      
+      <div class="chart-block__callout">Wind currently supplies 24% of Irish electricity generation.</div>
+      
+      <canvas id="chart-wind"></canvas>
+    </div>
+    
 
+    
+    <div class="chart-block">
+      <div class="chart-block__title">Grid CO₂ intensity</div>
+      <div class="chart-block__note">Daily average, grams of CO₂ per kWh generated</div>
+      
+      <div class="chart-block__callout">Grid CO₂ intensity is currently 182 gCO₂/kWh.</div>
+      
+      <canvas id="chart-co2"></canvas>
+    </div>
     
 
     
@@ -634,7 +672,21 @@ function makeChart(id, labels, data, color, opts) {
 }
 
 
+makeChart(
+  'chart-wind',
+  ["2026-04-04"],
+  [23.77],
+  '#1a7f4b'
+);
 
+
+
+makeChart(
+  'chart-co2',
+  ["2026-04-04"],
+  [181.6],
+  '#b45309'
+);
 
 
 
@@ -646,10 +698,10 @@ function makeChart(id, labels, data, color, opts) {
   let labels = [];
 
   
-  labels = ["2025-08-26", "2025-09-12", "2025-11-06", "2025-12-03", "2025-12-11", "2026-01-05", "2026-01-20", "2026-03-29", "2026-03-30", "2026-03-31", "2026-04-01", "2026-04-02", "2026-04-03"];
+  labels = ["2025-08-26", "2025-09-12", "2025-11-06", "2025-12-03", "2025-12-11", "2026-01-05", "2026-01-20", "2026-03-29", "2026-03-30", "2026-03-31", "2026-04-01", "2026-04-02", "2026-04-03", "2026-04-04"];
   datasets.push({
     label: 'Petrol',
-    data:        [1.7278, 1.6966, 1.72, 1.72, 1.74, 1.74, 1.7, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81],
+    data:        [1.7278, 1.6966, 1.72, 1.72, 1.74, 1.74, 1.7, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81],
     borderColor: '#1d4ed8',
     tension: 0.3, fill: false, pointRadius: 0, hoverRadius: 4, borderWidth: 2
   });
@@ -659,7 +711,7 @@ function makeChart(id, labels, data, color, opts) {
   
   datasets.push({
     label: 'Diesel',
-    data:        [1.6937, 1.6766, 1.68, 1.68, 1.72, 1.73, 1.69, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9],
+    data:        [1.6937, 1.6766, 1.68, 1.68, 1.72, 1.73, 1.69, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9],
     borderColor: '#6d28d9',
     tension: 0.3, fill: false, pointRadius: 0, hoverRadius: 4, borderWidth: 2
   });
