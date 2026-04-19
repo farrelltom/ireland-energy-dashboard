@@ -277,7 +277,7 @@
 
 <header class="site-header">
   <span class="site-header__title">Ireland Energy</span>
-  <span class="site-header__sub">Updated daily from public sources &mdash; data to 2026-04-18</span>
+  <span class="site-header__sub">Updated daily from public sources &mdash; data to 2026-04-19</span>
 </header>
 
 <main>
@@ -407,12 +407,12 @@
     
     <div class="kpi">
       <div class="kpi__label">System demand</div>
-      <div class="kpi__value">4309</div>
+      <div class="kpi__value">4115</div>
       <div class="kpi__unit">MW daily avg</div>
       
       
       <div class="kpi__delta delta--neutral">
-        +13 MW vs last week
+        +142 MW vs last week
       </div>
       
     </div>
@@ -440,7 +440,7 @@
       
       <li>Grid CO₂ intensity averaged 127 gCO₂/kWh yesterday.</li>
       
-      <li>System demand averaged 4309 MW yesterday (wind supplied roughly 2813 MW of that).</li>
+      <li>System demand averaged 4115 MW yesterday (wind supplied roughly 2686 MW of that).</li>
       
       <li>Ireland was a net importer of electricity yesterday, drawing an average of 281 MW from interconnectors.</li>
       
@@ -711,10 +711,10 @@ makeChart(
   let labels = [];
 
   
-  labels = ["2025-08-26", "2025-09-12", "2025-11-06", "2025-12-03", "2025-12-11", "2026-01-05", "2026-01-20", "2026-03-29", "2026-03-30", "2026-03-31", "2026-04-01", "2026-04-02", "2026-04-03", "2026-04-04", "2026-04-05", "2026-04-06", "2026-04-07", "2026-04-08", "2026-04-09", "2026-04-10", "2026-04-11", "2026-04-12", "2026-04-13", "2026-04-14", "2026-04-15", "2026-04-16", "2026-04-17", "2026-04-18"];
+  labels = ["2025-08-26", "2025-09-12", "2025-11-06", "2025-12-03", "2025-12-11", "2026-01-05", "2026-01-20", "2026-03-29", "2026-03-30", "2026-03-31", "2026-04-01", "2026-04-02", "2026-04-03", "2026-04-04", "2026-04-05", "2026-04-06", "2026-04-07", "2026-04-08", "2026-04-09", "2026-04-10", "2026-04-11", "2026-04-12", "2026-04-13", "2026-04-14", "2026-04-15", "2026-04-16", "2026-04-17", "2026-04-18", "2026-04-19"];
   datasets.push({
     label: 'Petrol',
-    data:        [1.7278, 1.6966, 1.72, 1.72, 1.74, 1.74, 1.7, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.91, 1.91, 1.91, 1.91, 1.91],
+    data:        [1.7278, 1.6966, 1.72, 1.72, 1.74, 1.74, 1.7, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91],
     borderColor: '#1d4ed8',
     tension: 0.3, fill: false, pointRadius: 0, hoverRadius: 4, borderWidth: 2
   });
@@ -724,7 +724,7 @@ makeChart(
   
   datasets.push({
     label: 'Diesel',
-    data:        [1.6937, 1.6766, 1.68, 1.68, 1.72, 1.73, 1.69, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 2.14, 2.14, 2.14, 2.14, 2.14],
+    data:        [1.6937, 1.6766, 1.68, 1.68, 1.72, 1.73, 1.69, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14],
     borderColor: '#6d28d9',
     tension: 0.3, fill: false, pointRadius: 0, hoverRadius: 4, borderWidth: 2
   });
@@ -743,8 +743,8 @@ makeChart(
 
 makeChart(
   'chart-demand',
-  ["2026-03-31", "2026-04-02", "2026-04-11", "2026-04-12", "2026-04-13", "2026-04-15", "2026-04-16"],
-  [4375.5, 4598.2, 4295.8, 3973.0, 4390.0, 4309.7, 4309.0],
+  ["2026-03-31", "2026-04-02", "2026-04-11", "2026-04-12", "2026-04-13", "2026-04-15", "2026-04-16", "2026-04-19"],
+  [4375.5, 4598.2, 4295.8, 3973.0, 4390.0, 4309.7, 4309.0, 4114.6],
   '#0369a1'
 );
 
