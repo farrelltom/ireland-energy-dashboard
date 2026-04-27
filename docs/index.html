@@ -277,7 +277,7 @@
 
 <header class="site-header">
   <span class="site-header__title">Ireland Energy</span>
-  <span class="site-header__sub">Updated daily from public sources &mdash; data to 2026-04-26</span>
+  <span class="site-header__sub">Updated daily from public sources &mdash; data to 2026-04-27</span>
 </header>
 
 <main>
@@ -429,7 +429,7 @@
     
     <div class="kpi">
       <div class="kpi__label">Net interconnection</div>
-      <div class="kpi__value">894</div>
+      <div class="kpi__value">873</div>
       <div class="kpi__unit">MW daily avg &mdash; importing</div>
     </div>
     
@@ -449,7 +449,7 @@
       
       <li>System demand averaged 3885 MW yesterday (wind supplied roughly 232 MW of that).</li>
       
-      <li>Ireland was a net importer of electricity yesterday, drawing an average of 894 MW from interconnectors.</li>
+      <li>Ireland was a net importer of electricity yesterday, drawing an average of 873 MW from interconnectors.</li>
       
       <li>EV (home charging at €0.40/kWh) costs €7.20/100km vs €12.41/100km for petrol — 42% cheaper.</li>
       
@@ -610,7 +610,7 @@
       <div class="chart-block__title">Net interconnection flow</div>
       <div class="chart-block__note">Daily average MW &mdash; positive = importing, negative = exporting</div>
       
-      <div class="chart-block__callout">Ireland is drawing around 894 MW from interconnectors — a net importer yesterday.</div>
+      <div class="chart-block__callout">Ireland is drawing around 873 MW from interconnectors — a net importer yesterday.</div>
       
       <canvas id="chart-inter"></canvas>
     </div>
@@ -718,10 +718,10 @@ makeChart(
   let labels = [];
 
   
-  labels = ["2025-08-26", "2025-09-12", "2025-11-06", "2025-12-03", "2025-12-11", "2026-01-05", "2026-01-20", "2026-03-29", "2026-03-30", "2026-03-31", "2026-04-01", "2026-04-02", "2026-04-03", "2026-04-04", "2026-04-05", "2026-04-06", "2026-04-07", "2026-04-08", "2026-04-09", "2026-04-10", "2026-04-11", "2026-04-12", "2026-04-13", "2026-04-14", "2026-04-15", "2026-04-16", "2026-04-17", "2026-04-18", "2026-04-19", "2026-04-20", "2026-04-21", "2026-04-22", "2026-04-23", "2026-04-24", "2026-04-25", "2026-04-26"];
+  labels = ["2025-08-26", "2025-09-12", "2025-11-06", "2025-12-03", "2025-12-11", "2026-01-05", "2026-01-20", "2026-03-29", "2026-03-30", "2026-03-31", "2026-04-01", "2026-04-02", "2026-04-03", "2026-04-04", "2026-04-05", "2026-04-06", "2026-04-07", "2026-04-08", "2026-04-09", "2026-04-10", "2026-04-11", "2026-04-12", "2026-04-13", "2026-04-14", "2026-04-15", "2026-04-16", "2026-04-17", "2026-04-18", "2026-04-19", "2026-04-20", "2026-04-21", "2026-04-22", "2026-04-23", "2026-04-24", "2026-04-25", "2026-04-26", "2026-04-27"];
   datasets.push({
     label: 'Petrol',
-    data:        [1.7278, 1.6966, 1.72, 1.72, 1.74, 1.74, 1.7, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91],
+    data:        [1.7278, 1.6966, 1.72, 1.72, 1.74, 1.74, 1.7, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91],
     borderColor: '#1d4ed8',
     tension: 0.3, fill: false, pointRadius: 0, hoverRadius: 4, borderWidth: 2
   });
@@ -731,7 +731,7 @@ makeChart(
   
   datasets.push({
     label: 'Diesel',
-    data:        [1.6937, 1.6766, 1.68, 1.68, 1.72, 1.73, 1.69, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14],
+    data:        [1.6937, 1.6766, 1.68, 1.68, 1.72, 1.73, 1.69, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14],
     borderColor: '#6d28d9',
     tension: 0.3, fill: false, pointRadius: 0, hoverRadius: 4, borderWidth: 2
   });
@@ -764,9 +764,9 @@ makeChart(
   new Chart(el, {
     type: 'line',
     data: {
-      labels: ["2026-03-30", "2026-03-31", "2026-04-01", "2026-04-03", "2026-04-05", "2026-04-08", "2026-04-09", "2026-04-12", "2026-04-14", "2026-04-16", "2026-04-20", "2026-04-22", "2026-04-23", "2026-04-25", "2026-04-26"],
+      labels: ["2026-03-30", "2026-03-31", "2026-04-01", "2026-04-03", "2026-04-05", "2026-04-08", "2026-04-09", "2026-04-12", "2026-04-14", "2026-04-16", "2026-04-20", "2026-04-22", "2026-04-23", "2026-04-25", "2026-04-26", "2026-04-27"],
       datasets: [{
-        data:        [898.3, 1005.3, 830.3, 294.2, 1234.7, 1469.6, 517.9, -9.2, 98.8, 280.8, 906.0, -166.6, 23.5, 904.2, 894.2],
+        data:        [898.3, 1005.3, 830.3, 294.2, 1234.7, 1469.6, 517.9, -9.2, 98.8, 280.8, 906.0, -166.6, 23.5, 904.2, 894.2, 873.1],
         borderColor: '#7c3aed',
         fill: {
           target: { value: 0 },
