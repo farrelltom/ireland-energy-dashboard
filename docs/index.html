@@ -277,7 +277,7 @@
 
 <header class="site-header">
   <span class="site-header__title">Ireland Energy</span>
-  <span class="site-header__sub">Updated daily from public sources &mdash; data to 2026-05-19</span>
+  <span class="site-header__sub">Updated daily from public sources &mdash; data to 2026-05-20</span>
 </header>
 
 <main>
@@ -286,7 +286,7 @@
   <div class="section">
     <h1 class="page-title">Ireland's energy<br>this week</h1>
     
-    <p class="headline">EV home charging costs 42% less per 100 km than petrol at current pump prices — and wind supplied 35% of Ireland’s electricity yesterday.</p>
+    <p class="headline">EV home charging costs 39% less per 100 km than petrol at current pump prices — and wind supplied 35% of Ireland’s electricity yesterday.</p>
     
     
     <div class="changes-row">
@@ -295,9 +295,9 @@
       
       <span class="change-pill change-pill--good">↓ 10 gCO₂/kWh&thinsp;CO₂ intensity</span>
       
-      <span class="change-pill change-pill--bad">↑ €0.000/L&thinsp;Petrol</span>
+      <span class="change-pill change-pill--good">↓ €0.090/L&thinsp;Petrol</span>
       
-      <span class="change-pill change-pill--bad">↑ €0.000/L&thinsp;Diesel</span>
+      <span class="change-pill change-pill--good">↓ €0.170/L&thinsp;Diesel</span>
       
     </div>
     
@@ -319,20 +319,20 @@
       
       <div class="cost-row">
         <span class="cost-row__label">Petrol at pump (6.5 L/100 km)</span>
-        <span class="cost-row__value">€12.41</span>
+        <span class="cost-row__value">€11.83</span>
       </div>
       
       
       
       <div class="cost-row">
         <span class="cost-row__label">Diesel at pump (6.2 L/100 km)</span>
-        <span class="cost-row__value">€13.27</span>
+        <span class="cost-row__value">€12.21</span>
       </div>
       
       
       
       
-      <div class="cost-saving">EV is ~42% cheaper per 100 km than petrol</div>
+      <div class="cost-saving">EV is ~39% cheaper per 100 km than petrol</div>
       
     </div>
   </div>
@@ -380,12 +380,12 @@
     
     <div class="kpi">
       <div class="kpi__label">Petrol pump price</div>
-      <div class="kpi__value">€1.910</div>
+      <div class="kpi__value">€1.820</div>
       <div class="kpi__unit">per litre</div>
       
       
-      <div class="kpi__delta delta--neg">
-        +€0.000 vs last week
+      <div class="kpi__delta delta--pos">
+        €-0.090 vs last week
       </div>
       
     </div>
@@ -395,12 +395,12 @@
     
     <div class="kpi">
       <div class="kpi__label">Diesel pump price</div>
-      <div class="kpi__value">€2.140</div>
+      <div class="kpi__value">€1.970</div>
       <div class="kpi__unit">per litre</div>
       
       
-      <div class="kpi__delta delta--neg">
-        +€0.000 vs last week
+      <div class="kpi__delta delta--pos">
+        €-0.170 vs last week
       </div>
       
     </div>
@@ -451,7 +451,7 @@
       
       <li>Ireland was a net importer of electricity yesterday, drawing an average of 1231 MW from interconnectors.</li>
       
-      <li>EV (home charging at €0.40/kWh) costs €7.20/100km vs €12.41/100km for petrol — 42% cheaper.</li>
+      <li>EV (home charging at €0.40/kWh) costs €7.20/100km vs €11.83/100km for petrol — 39% cheaper.</li>
       
     </ul>
   </div>
@@ -589,7 +589,7 @@
       <div class="chart-block__title">Pump prices at the forecourt</div>
       <div class="chart-block__note">€ per litre &mdash; petrol and diesel, AA Ireland national average</div>
       
-      <div class="chart-block__callout">Pump prices are unchanged from last week.</div>
+      <div class="chart-block__callout">Pump prices have fallen since last week.</div>
       
       <canvas id="chart-fuel"></canvas>
     </div>
@@ -718,10 +718,10 @@ makeChart(
   let labels = [];
 
   
-  labels = ["2025-08-26", "2025-09-12", "2025-11-06", "2025-12-03", "2025-12-11", "2026-01-05", "2026-01-20", "2026-03-29", "2026-03-30", "2026-03-31", "2026-04-01", "2026-04-02", "2026-04-03", "2026-04-04", "2026-04-05", "2026-04-06", "2026-04-07", "2026-04-08", "2026-04-09", "2026-04-10", "2026-04-11", "2026-04-12", "2026-04-13", "2026-04-14", "2026-04-15", "2026-04-16", "2026-04-17", "2026-04-18", "2026-04-19", "2026-04-20", "2026-04-21", "2026-04-22", "2026-04-23", "2026-04-24", "2026-04-25", "2026-04-26", "2026-04-27", "2026-04-28", "2026-04-29", "2026-04-30", "2026-05-01", "2026-05-02", "2026-05-03", "2026-05-04", "2026-05-05", "2026-05-06", "2026-05-07", "2026-05-08", "2026-05-09", "2026-05-10", "2026-05-11", "2026-05-12", "2026-05-13", "2026-05-14", "2026-05-15", "2026-05-16", "2026-05-17", "2026-05-18", "2026-05-19"];
+  labels = ["2025-08-26", "2025-09-12", "2025-11-06", "2025-12-03", "2025-12-11", "2026-01-05", "2026-01-20", "2026-03-29", "2026-03-30", "2026-03-31", "2026-04-01", "2026-04-02", "2026-04-03", "2026-04-04", "2026-04-05", "2026-04-06", "2026-04-07", "2026-04-08", "2026-04-09", "2026-04-10", "2026-04-11", "2026-04-12", "2026-04-13", "2026-04-14", "2026-04-15", "2026-04-16", "2026-04-17", "2026-04-18", "2026-04-19", "2026-04-20", "2026-04-21", "2026-04-22", "2026-04-23", "2026-04-24", "2026-04-25", "2026-04-26", "2026-04-27", "2026-04-28", "2026-04-29", "2026-04-30", "2026-05-01", "2026-05-02", "2026-05-03", "2026-05-04", "2026-05-05", "2026-05-06", "2026-05-07", "2026-05-08", "2026-05-09", "2026-05-10", "2026-05-11", "2026-05-12", "2026-05-13", "2026-05-14", "2026-05-15", "2026-05-16", "2026-05-17", "2026-05-18", "2026-05-19", "2026-05-20"];
   datasets.push({
     label: 'Petrol',
-    data:        [1.7278, 1.6966, 1.72, 1.72, 1.74, 1.74, 1.7, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91],
+    data:        [1.7278, 1.6966, 1.72, 1.72, 1.74, 1.74, 1.7, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.81, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.91, 1.82],
     borderColor: '#1d4ed8',
     tension: 0.3, fill: false, pointRadius: 0, hoverRadius: 4, borderWidth: 2
   });
@@ -731,7 +731,7 @@ makeChart(
   
   datasets.push({
     label: 'Diesel',
-    data:        [1.6937, 1.6766, 1.68, 1.68, 1.72, 1.73, 1.69, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14],
+    data:        [1.6937, 1.6766, 1.68, 1.68, 1.72, 1.73, 1.69, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 2.14, 1.97],
     borderColor: '#6d28d9',
     tension: 0.3, fill: false, pointRadius: 0, hoverRadius: 4, borderWidth: 2
   });
