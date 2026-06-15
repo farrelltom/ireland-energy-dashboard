@@ -1,12 +1,12 @@
 {
-  "series_csv_sha256": "74ba887e36b4781b2e6a4b92ead498f7cfc5ecf1ce195ad3651cf1ace79f2cd4",
-  "tariffs_csv_sha256": "6fae46545c43b50b1b457d3894508d6222c5bc192f8d737307549db61a61363c",
-  "page_latest_date": "2026-06-14",
-  "headline": "EV home charging costs 39% less per 100\u202fkm than petrol at current pump prices \u2014 and wind supplied 47% of Ireland\u2019s electricity yesterday.",
+  "series_csv_sha256": "55fd92cfa03b2bb9cb4466e0d20d6804dd0cb880ea9192a66aca71de66b87450",
+  "tariffs_csv_sha256": "784399a8afbc56cf59d94db54d6873571f6299c3507d8b5c30032a65e4500ca0",
+  "page_latest_date": "2026-06-15",
+  "headline": "EV home charging costs 39% less per 100\u202fkm than petrol at current pump prices \u2014 and wind supplied 32% of Ireland\u2019s electricity yesterday.",
   "changes": [
     {
       "label": "Wind",
-      "delta_str": "\u2193\u202f11pp",
+      "delta_str": "\u2193\u202f8pp",
       "direction": "bad"
     },
     {
@@ -41,7 +41,7 @@
         "standing_charge_eur_per_year": 244.76,
         "discount_pct": 26,
         "annual_cost_eur": 1537.52,
-        "as_of": "2026-06-14"
+        "as_of": "2026-06-15"
       },
       {
         "supplier": "SSE Airtricity",
@@ -51,7 +51,7 @@
         "standing_charge_eur_per_year": 263.86,
         "discount_pct": 25,
         "annual_cost_eur": 1559.56,
-        "as_of": "2026-06-14"
+        "as_of": "2026-06-15"
       },
       {
         "supplier": "Energia",
@@ -61,7 +61,7 @@
         "standing_charge_eur_per_year": 265.01,
         "discount_pct": 15,
         "annual_cost_eur": 1769.03,
-        "as_of": "2026-06-14"
+        "as_of": "2026-06-15"
       },
       {
         "supplier": "SSE Airtricity",
@@ -71,7 +71,7 @@
         "standing_charge_eur_per_year": 263.86,
         "discount_pct": null,
         "annual_cost_eur": 1991.32,
-        "as_of": "2026-06-14"
+        "as_of": "2026-06-15"
       },
       {
         "supplier": "Bord G\u00e1is Energy",
@@ -81,7 +81,7 @@
         "standing_charge_eur_per_year": 244.76,
         "discount_pct": null,
         "annual_cost_eur": 1991.54,
-        "as_of": "2026-06-14"
+        "as_of": "2026-06-15"
       },
       {
         "supplier": "Energia",
@@ -91,7 +91,7 @@
         "standing_charge_eur_per_year": 265.01,
         "discount_pct": null,
         "annual_cost_eur": 2056.31,
-        "as_of": "2026-06-14"
+        "as_of": "2026-06-15"
       }
     ],
     "cheapest_new": "Bord G\u00e1is Energy",
@@ -101,14 +101,14 @@
   "metrics": {
     "diesel_price_eur_per_litre": {
       "latest_value": 1.97,
-      "latest_date": "2026-06-14",
+      "latest_date": "2026-06-15",
       "unit": "\u20ac/litre",
       "week_over_week_delta": 0.0,
       "week_over_week_pct_change": 0.0
     },
     "petrol_price_eur_per_litre": {
       "latest_value": 1.82,
-      "latest_date": "2026-06-14",
+      "latest_date": "2026-06-15",
       "unit": "\u20ac/litre",
       "week_over_week_delta": 0.0,
       "week_over_week_pct_change": 0.0
@@ -135,35 +135,35 @@
       "week_over_week_pct_change": 15.0
     },
     "wind_pct_of_generation_daily_avg": {
-      "latest_value": 47.15,
-      "latest_date": "2026-06-13",
+      "latest_value": 31.77,
+      "latest_date": "2026-06-15",
       "unit": "%",
-      "week_over_week_delta": -10.96,
-      "week_over_week_pct_change": -18.9
+      "week_over_week_delta": -8.37,
+      "week_over_week_pct_change": -20.9
     },
     "ev_cost_eur_per_100km": {
       "latest_value": 7.2,
-      "latest_date": "2026-06-14",
+      "latest_date": "2026-06-15",
       "unit": "\u20ac/100km",
       "electricity_rate_used": 0.4
     },
     "petrol_cost_eur_per_100km": {
       "latest_value": 11.83,
-      "latest_date": "2026-06-14",
+      "latest_date": "2026-06-15",
       "unit": "\u20ac/100km",
       "consumption_l_per_100km": 6.5
     },
     "diesel_cost_eur_per_100km": {
       "latest_value": 12.21,
-      "latest_date": "2026-06-14",
+      "latest_date": "2026-06-15",
       "unit": "\u20ac/100km",
       "consumption_l_per_100km": 6.2
     }
   },
   "insights": [
-    "Wind was 47% of generation yesterday, down 11 percentage points vs last week.",
+    "Wind was 32% of generation yesterday, down 8 percentage points vs last week.",
     "Grid CO\u2082 intensity averaged 194 gCO\u2082/kWh yesterday.",
-    "System demand averaged 3794 MW yesterday (wind supplied roughly 1789 MW of that).",
+    "System demand averaged 3794 MW yesterday (wind supplied roughly 1205 MW of that).",
     "Ireland was a net importer of electricity yesterday, drawing an average of 1296 MW from interconnectors.",
     "EV (home charging at \u20ac0.40/kWh) costs \u20ac7.20/100km vs \u20ac11.83/100km for petrol \u2014 39% cheaper."
   ]
