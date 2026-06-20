@@ -1,8 +1,8 @@
 {
-  "series_csv_sha256": "c9dab301b00d7662a8a47032593b2cf3140edd6e2b36cd14b36691c93cde626a",
-  "tariffs_csv_sha256": "f321dd271b4c3e5c9acca30a49e67f146a07995b141bbfacda6e1299e7e719fb",
-  "page_latest_date": "2026-06-19",
-  "headline": "EV home charging costs 39% less per 100\u202fkm than petrol at current pump prices \u2014 and wind supplied 39% of Ireland\u2019s electricity yesterday.",
+  "series_csv_sha256": "584987120eb78df2b62f024b106f6773ba5ae5eca4427aceb13ca1c5cfc9d6fc",
+  "tariffs_csv_sha256": "d4b601dfc7591551fa806b5badb8178ae20be242785c69c78618e314a1729810",
+  "page_latest_date": "2026-06-20",
+  "headline": "EV home charging costs 40% less per 100\u202fkm than petrol at current pump prices \u2014 and wind supplied 39% of Ireland\u2019s electricity yesterday.",
   "changes": [
     {
       "label": "Wind",
@@ -41,7 +41,7 @@
         "standing_charge_eur_per_year": 244.76,
         "discount_pct": 26,
         "annual_cost_eur": 1537.52,
-        "as_of": "2026-06-19"
+        "as_of": "2026-06-20"
       },
       {
         "supplier": "SSE Airtricity",
@@ -51,7 +51,7 @@
         "standing_charge_eur_per_year": 263.86,
         "discount_pct": 25,
         "annual_cost_eur": 1559.56,
-        "as_of": "2026-06-19"
+        "as_of": "2026-06-20"
       },
       {
         "supplier": "Energia",
@@ -61,7 +61,7 @@
         "standing_charge_eur_per_year": 265.01,
         "discount_pct": 15,
         "annual_cost_eur": 1769.03,
-        "as_of": "2026-06-19"
+        "as_of": "2026-06-20"
       },
       {
         "supplier": "SSE Airtricity",
@@ -71,7 +71,7 @@
         "standing_charge_eur_per_year": 263.86,
         "discount_pct": null,
         "annual_cost_eur": 1991.32,
-        "as_of": "2026-06-19"
+        "as_of": "2026-06-20"
       },
       {
         "supplier": "Bord G\u00e1is Energy",
@@ -81,7 +81,7 @@
         "standing_charge_eur_per_year": 244.76,
         "discount_pct": null,
         "annual_cost_eur": 1991.54,
-        "as_of": "2026-06-19"
+        "as_of": "2026-06-20"
       },
       {
         "supplier": "Energia",
@@ -91,7 +91,7 @@
         "standing_charge_eur_per_year": 265.01,
         "discount_pct": null,
         "annual_cost_eur": 2056.31,
-        "as_of": "2026-06-19"
+        "as_of": "2026-06-20"
       }
     ],
     "cheapest_new": "Bord G\u00e1is Energy",
@@ -100,15 +100,15 @@
   },
   "metrics": {
     "diesel_price_eur_per_litre": {
-      "latest_value": 1.97,
-      "latest_date": "2026-06-19",
+      "latest_value": 1.88,
+      "latest_date": "2026-06-20",
       "unit": "\u20ac/litre",
       "week_over_week_delta": 0.0,
       "week_over_week_pct_change": 0.0
     },
     "petrol_price_eur_per_litre": {
-      "latest_value": 1.82,
-      "latest_date": "2026-06-19",
+      "latest_value": 1.84,
+      "latest_date": "2026-06-20",
       "unit": "\u20ac/litre",
       "week_over_week_delta": 0.0,
       "week_over_week_pct_change": 0.0
@@ -143,19 +143,19 @@
     },
     "ev_cost_eur_per_100km": {
       "latest_value": 7.2,
-      "latest_date": "2026-06-19",
+      "latest_date": "2026-06-20",
       "unit": "\u20ac/100km",
       "electricity_rate_used": 0.4
     },
     "petrol_cost_eur_per_100km": {
-      "latest_value": 11.83,
-      "latest_date": "2026-06-19",
+      "latest_value": 11.96,
+      "latest_date": "2026-06-20",
       "unit": "\u20ac/100km",
       "consumption_l_per_100km": 6.5
     },
     "diesel_cost_eur_per_100km": {
-      "latest_value": 12.21,
-      "latest_date": "2026-06-19",
+      "latest_value": 11.66,
+      "latest_date": "2026-06-20",
       "unit": "\u20ac/100km",
       "consumption_l_per_100km": 6.2
     }
@@ -165,6 +165,6 @@
     "Grid CO\u2082 intensity averaged 221 gCO\u2082/kWh yesterday.",
     "System demand averaged 4241 MW yesterday (wind supplied roughly 1649 MW of that).",
     "Ireland was a net importer of electricity yesterday, drawing an average of 921 MW from interconnectors.",
-    "EV (home charging at \u20ac0.40/kWh) costs \u20ac7.20/100km vs \u20ac11.83/100km for petrol \u2014 39% cheaper."
+    "EV (home charging at \u20ac0.40/kWh) costs \u20ac7.20/100km vs \u20ac11.96/100km for petrol \u2014 40% cheaper."
   ]
 }
