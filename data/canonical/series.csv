@@ -310,3 +310,8 @@ date,metric,value,unit,source
 2026-06-22,co2_intensity_daily_avg,263.1,gCO2/kWh,eirgrid
 2026-06-22,diesel_price_eur_per_litre,1.88,€/litre,aa_fuel
 2026-06-22,petrol_price_eur_per_litre,1.84,€/litre,aa_fuel
+2026-06-23,co2_intensity_daily_avg,315.8,gCO2/kWh,eirgrid
+2026-06-23,demand_mw_daily_avg,4204.4,MW,eirgrid
+2026-06-23,diesel_price_eur_per_litre,1.88,€/litre,aa_fuel
+2026-06-23,net_interconnection_mw_daily_avg,897.3,MW,eirgrid
+2026-06-23,petrol_price_eur_per_litre,1.84,€/litre,aa_fuel
