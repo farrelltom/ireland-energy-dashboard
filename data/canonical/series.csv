@@ -413,3 +413,6 @@ date,metric,value,unit,source
 2026-07-13,net_interconnection_mw_daily_avg,531.8,MW,eirgrid
 2026-07-13,petrol_price_eur_per_litre,1.84,€/litre,aa_fuel
 2026-07-13,wind_pct_of_generation_daily_avg,50.19,%,eirgrid
+2026-07-14,diesel_price_eur_per_litre,1.7279,€/litre,aa_fuel
+2026-07-14,petrol_price_eur_per_litre,1.753,€/litre,aa_fuel
+2026-07-14,wind_pct_of_generation_daily_avg,38.13,%,eirgrid
