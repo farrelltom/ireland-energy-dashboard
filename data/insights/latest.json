@@ -1,7 +1,7 @@
 {
-  "series_csv_sha256": "7bba43a984b5860e979ce0f6b1c9ddea6f173e47dcc0f70991c192898078eb3a",
-  "tariffs_csv_sha256": "5d3ce6a5b1bd3fd978b12967c6d717fe3477e130bbf95fb2a9796c80cb44fe42",
-  "page_latest_date": "2026-08-04",
+  "series_csv_sha256": "cb66dabaec4180645d96ca245100c14f09963ea4967237701aba15395acf53e5",
+  "tariffs_csv_sha256": "2691af37c071360a698a8077703b08d4e200883d885eb13043f537eb800511cf",
+  "page_latest_date": "2026-08-05",
   "headline": "EV home charging costs 37% less per 100\u202fkm than petrol at current pump prices \u2014 and wind supplied 39% of Ireland\u2019s electricity yesterday.",
   "changes": [
     {
@@ -41,7 +41,7 @@
         "standing_charge_eur_per_year": 263.86,
         "discount_pct": 30,
         "annual_cost_eur": 1473.04,
-        "as_of": "2026-08-04"
+        "as_of": "2026-08-05"
       },
       {
         "supplier": "Bord G\u00e1is Energy",
@@ -51,7 +51,7 @@
         "standing_charge_eur_per_year": 244.76,
         "discount_pct": 26,
         "annual_cost_eur": 1537.52,
-        "as_of": "2026-08-04"
+        "as_of": "2026-08-05"
       },
       {
         "supplier": "Energia",
@@ -61,7 +61,7 @@
         "standing_charge_eur_per_year": 265.01,
         "discount_pct": 15,
         "annual_cost_eur": 1769.03,
-        "as_of": "2026-08-04"
+        "as_of": "2026-08-05"
       },
       {
         "supplier": "SSE Airtricity",
@@ -71,7 +71,7 @@
         "standing_charge_eur_per_year": 263.86,
         "discount_pct": null,
         "annual_cost_eur": 1991.32,
-        "as_of": "2026-08-04"
+        "as_of": "2026-08-05"
       },
       {
         "supplier": "Bord G\u00e1is Energy",
@@ -81,7 +81,7 @@
         "standing_charge_eur_per_year": 244.76,
         "discount_pct": null,
         "annual_cost_eur": 1991.54,
-        "as_of": "2026-08-04"
+        "as_of": "2026-08-05"
       },
       {
         "supplier": "Energia",
@@ -91,7 +91,7 @@
         "standing_charge_eur_per_year": 265.01,
         "discount_pct": null,
         "annual_cost_eur": 2056.31,
-        "as_of": "2026-08-04"
+        "as_of": "2026-08-05"
       }
     ],
     "cheapest_new": "SSE Airtricity",
@@ -101,14 +101,14 @@
   "metrics": {
     "diesel_price_eur_per_litre": {
       "latest_value": 1.7279,
-      "latest_date": "2026-08-04",
+      "latest_date": "2026-08-05",
       "unit": "\u20ac/litre",
       "week_over_week_delta": 0.0,
       "week_over_week_pct_change": 0.0
     },
     "petrol_price_eur_per_litre": {
       "latest_value": 1.753,
-      "latest_date": "2026-08-04",
+      "latest_date": "2026-08-05",
       "unit": "\u20ac/litre",
       "week_over_week_delta": 0.0,
       "week_over_week_pct_change": 0.0
@@ -143,19 +143,19 @@
     },
     "ev_cost_eur_per_100km": {
       "latest_value": 7.2,
-      "latest_date": "2026-08-04",
+      "latest_date": "2026-08-05",
       "unit": "\u20ac/100km",
       "electricity_rate_used": 0.4
     },
     "petrol_cost_eur_per_100km": {
       "latest_value": 11.39,
-      "latest_date": "2026-08-04",
+      "latest_date": "2026-08-05",
       "unit": "\u20ac/100km",
       "consumption_l_per_100km": 6.5
     },
     "diesel_cost_eur_per_100km": {
       "latest_value": 10.71,
-      "latest_date": "2026-08-04",
+      "latest_date": "2026-08-05",
       "unit": "\u20ac/100km",
       "consumption_l_per_100km": 6.2
     }
