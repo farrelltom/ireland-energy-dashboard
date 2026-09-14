@@ -693,3 +693,6 @@ date,metric,value,unit,source
 2026-09-13,diesel_price_eur_per_litre,1.9156,€/litre,aa_fuel
 2026-09-13,net_interconnection_mw_daily_avg,1436.8,MW,eirgrid
 2026-09-13,petrol_price_eur_per_litre,1.8366,€/litre,aa_fuel
+2026-09-14,diesel_price_eur_per_litre,1.9156,€/litre,aa_fuel
+2026-09-14,net_interconnection_mw_daily_avg,695.5,MW,eirgrid
+2026-09-14,petrol_price_eur_per_litre,1.8366,€/litre,aa_fuel
