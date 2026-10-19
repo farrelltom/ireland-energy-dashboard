@@ -865,3 +865,8 @@ date,metric,value,unit,source
 2026-10-17,wind_pct_of_generation_daily_avg,13.63,%,eirgrid
 2026-10-18,diesel_price_eur_per_litre,2.1476,€/litre,aa_fuel
 2026-10-18,petrol_price_eur_per_litre,1.9816,€/litre,aa_fuel
+2026-10-19,co2_intensity_daily_avg,247.9,gCO2/kWh,eirgrid
+2026-10-19,diesel_price_eur_per_litre,2.1476,€/litre,aa_fuel
+2026-10-19,net_interconnection_mw_daily_avg,1417.4,MW,eirgrid
+2026-10-19,petrol_price_eur_per_litre,1.9816,€/litre,aa_fuel
+2026-10-19,wind_pct_of_generation_daily_avg,8.67,%,eirgrid
