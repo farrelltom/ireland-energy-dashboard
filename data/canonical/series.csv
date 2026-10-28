@@ -898,3 +898,5 @@ date,metric,value,unit,source
 2026-10-27,diesel_price_eur_per_litre,2.1476,€/litre,aa_fuel
 2026-10-27,petrol_price_eur_per_litre,1.9816,€/litre,aa_fuel
 2026-10-27,wind_pct_of_generation_daily_avg,71.73,%,eirgrid
+2026-10-28,diesel_price_eur_per_litre,2.1476,€/litre,aa_fuel
+2026-10-28,petrol_price_eur_per_litre,1.9816,€/litre,aa_fuel
