@@ -1,7 +1,7 @@
 {
-  "series_csv_sha256": "24eae700b9959cfbade7cfc2dc294caf131399271ae7ebcb8a48c3997210d07a",
-  "tariffs_csv_sha256": "f42510ba7468b6676bbfaa1e72af4cea3ee3a1a9cd27f6e4f2da46047d335c65",
-  "page_latest_date": "2026-10-29",
+  "series_csv_sha256": "d464a465dab9b39f247333b760f44144bac75f7e5df3bbc9ebb76a767abad51b",
+  "tariffs_csv_sha256": "bbf8097c70ed0025641a9c4b5b7406b995cbd525978622a0fe1a9acd642bd8cb",
+  "page_latest_date": "2026-10-30",
   "headline": "EV home charging costs 44% less per 100\u202fkm than petrol at current pump prices \u2014 and wind supplied 72% of Ireland\u2019s electricity yesterday.",
   "changes": [
     {
@@ -41,7 +41,7 @@
         "standing_charge_eur_per_year": 279.99,
         "discount_pct": 30,
         "annual_cost_eur": 1602.99,
-        "as_of": "2026-10-29"
+        "as_of": "2026-10-30"
       },
       {
         "supplier": "Bord G\u00e1is Energy",
@@ -51,7 +51,7 @@
         "standing_charge_eur_per_year": 262.38,
         "discount_pct": 28,
         "annual_cost_eur": 1634.52,
-        "as_of": "2026-10-29"
+        "as_of": "2026-10-30"
       },
       {
         "supplier": "Energia",
@@ -81,7 +81,7 @@
         "standing_charge_eur_per_year": 262.38,
         "discount_pct": null,
         "annual_cost_eur": 2168.34,
-        "as_of": "2026-10-29"
+        "as_of": "2026-10-30"
       },
       {
         "supplier": "SSE Airtricity",
@@ -91,7 +91,7 @@
         "standing_charge_eur_per_year": 279.99,
         "discount_pct": null,
         "annual_cost_eur": 2169.99,
-        "as_of": "2026-10-29"
+        "as_of": "2026-10-30"
       }
     ],
     "cheapest_new": "SSE Airtricity",
@@ -101,14 +101,14 @@
   "metrics": {
     "diesel_price_eur_per_litre": {
       "latest_value": 2.1476,
-      "latest_date": "2026-10-29",
+      "latest_date": "2026-10-30",
       "unit": "\u20ac/litre",
       "week_over_week_delta": 0.0,
       "week_over_week_pct_change": 0.0
     },
     "petrol_price_eur_per_litre": {
       "latest_value": 1.9816,
-      "latest_date": "2026-10-29",
+      "latest_date": "2026-10-30",
       "unit": "\u20ac/litre",
       "week_over_week_delta": 0.0,
       "week_over_week_pct_change": 0.0
@@ -143,19 +143,19 @@
     },
     "ev_cost_eur_per_100km": {
       "latest_value": 7.2,
-      "latest_date": "2026-10-29",
+      "latest_date": "2026-10-30",
       "unit": "\u20ac/100km",
       "electricity_rate_used": 0.4
     },
     "petrol_cost_eur_per_100km": {
       "latest_value": 12.88,
-      "latest_date": "2026-10-29",
+      "latest_date": "2026-10-30",
       "unit": "\u20ac/100km",
       "consumption_l_per_100km": 6.5
     },
     "diesel_cost_eur_per_100km": {
       "latest_value": 13.32,
-      "latest_date": "2026-10-29",
+      "latest_date": "2026-10-30",
       "unit": "\u20ac/100km",
       "consumption_l_per_100km": 6.2
     }
