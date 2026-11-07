@@ -1,7 +1,7 @@
 {
-  "series_csv_sha256": "4010134644217609dc1d417481b058edbe64dfb532e9161ff3cc2988611092c0",
-  "tariffs_csv_sha256": "26562f038b3c3a5a232c5f9f6523a9e83bb7ef38f3103d64da821970ec7ae008",
-  "page_latest_date": "2026-11-06",
+  "series_csv_sha256": "11064db6114ff642f5ea9708b0ef1d5bf0e45919679168c83bb9dd35a45bb523",
+  "tariffs_csv_sha256": "631f79155153d669bd7ed0241fe32b84a2653fda77400b542f2bb2e8940aef10",
+  "page_latest_date": "2026-11-07",
   "headline": "EV home charging costs 44% less per 100\u202fkm than petrol at current pump prices \u2014 and wind supplied 14% of Ireland\u2019s electricity yesterday.",
   "changes": [
     {
@@ -11,7 +11,7 @@
     },
     {
       "label": "CO\u2082 intensity",
-      "delta_str": "\u2191\u202f74\u202fgCO\u2082/kWh",
+      "delta_str": "\u2191\u202f36\u202fgCO\u2082/kWh",
       "direction": "bad"
     },
     {
@@ -41,7 +41,7 @@
         "standing_charge_eur_per_year": 279.99,
         "discount_pct": 30,
         "annual_cost_eur": 1602.99,
-        "as_of": "2026-11-06"
+        "as_of": "2026-11-07"
       },
       {
         "supplier": "Bord G\u00e1is Energy",
@@ -51,7 +51,7 @@
         "standing_charge_eur_per_year": 262.38,
         "discount_pct": 28,
         "annual_cost_eur": 1634.52,
-        "as_of": "2026-11-06"
+        "as_of": "2026-11-07"
       },
       {
         "supplier": "Energia",
@@ -81,7 +81,7 @@
         "standing_charge_eur_per_year": 262.38,
         "discount_pct": null,
         "annual_cost_eur": 2168.34,
-        "as_of": "2026-11-06"
+        "as_of": "2026-11-07"
       },
       {
         "supplier": "SSE Airtricity",
@@ -91,7 +91,7 @@
         "standing_charge_eur_per_year": 279.99,
         "discount_pct": null,
         "annual_cost_eur": 2169.99,
-        "as_of": "2026-11-06"
+        "as_of": "2026-11-07"
       }
     ],
     "cheapest_new": "SSE Airtricity",
@@ -101,14 +101,14 @@
   "metrics": {
     "diesel_price_eur_per_litre": {
       "latest_value": 2.1476,
-      "latest_date": "2026-11-06",
+      "latest_date": "2026-11-07",
       "unit": "\u20ac/litre",
       "week_over_week_delta": 0.0,
       "week_over_week_pct_change": 0.0
     },
     "petrol_price_eur_per_litre": {
       "latest_value": 1.9816,
-      "latest_date": "2026-11-06",
+      "latest_date": "2026-11-07",
       "unit": "\u20ac/litre",
       "week_over_week_delta": 0.0,
       "week_over_week_pct_change": 0.0
@@ -128,11 +128,11 @@
       "week_over_week_pct_change": 5.8
     },
     "co2_intensity_daily_avg": {
-      "latest_value": 259.8,
-      "latest_date": "2026-11-06",
+      "latest_value": 267.1,
+      "latest_date": "2026-11-07",
       "unit": "gCO2/kWh",
-      "week_over_week_delta": 74.0,
-      "week_over_week_pct_change": 39.8
+      "week_over_week_delta": 36.2,
+      "week_over_week_pct_change": 15.7
     },
     "wind_pct_of_generation_daily_avg": {
       "latest_value": 13.88,
@@ -143,26 +143,26 @@
     },
     "ev_cost_eur_per_100km": {
       "latest_value": 7.2,
-      "latest_date": "2026-11-06",
+      "latest_date": "2026-11-07",
       "unit": "\u20ac/100km",
       "electricity_rate_used": 0.4
     },
     "petrol_cost_eur_per_100km": {
       "latest_value": 12.88,
-      "latest_date": "2026-11-06",
+      "latest_date": "2026-11-07",
       "unit": "\u20ac/100km",
       "consumption_l_per_100km": 6.5
     },
     "diesel_cost_eur_per_100km": {
       "latest_value": 13.32,
-      "latest_date": "2026-11-06",
+      "latest_date": "2026-11-07",
       "unit": "\u20ac/100km",
       "consumption_l_per_100km": 6.2
     }
   },
   "insights": [
     "Wind was 14% of generation yesterday, down 21 percentage points vs last week.",
-    "Grid CO\u2082 intensity averaged 260 gCO\u2082/kWh yesterday.",
+    "Grid CO\u2082 intensity averaged 267 gCO\u2082/kWh yesterday.",
     "System demand averaged 4592 MW yesterday (wind supplied roughly 637 MW of that).",
     "Ireland was a net importer of electricity yesterday, drawing an average of 1288 MW from interconnectors.",
     "EV (home charging at \u20ac0.40/kWh) costs \u20ac7.20/100km vs \u20ac12.88/100km for petrol \u2014 44% cheaper."
