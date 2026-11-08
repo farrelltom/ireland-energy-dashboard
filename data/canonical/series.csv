@@ -940,3 +940,5 @@ date,metric,value,unit,source
 2026-11-07,co2_intensity_daily_avg,267.1,gCO2/kWh,eirgrid
 2026-11-07,diesel_price_eur_per_litre,2.1476,€/litre,aa_fuel
 2026-11-07,petrol_price_eur_per_litre,1.9816,€/litre,aa_fuel
+2026-11-08,diesel_price_eur_per_litre,2.1476,€/litre,aa_fuel
+2026-11-08,petrol_price_eur_per_litre,1.9816,€/litre,aa_fuel
